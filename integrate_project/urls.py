@@ -14,9 +14,26 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+
+# from django.contrib import admin
+# from django.urls import path, include
+# from recycle_connect.views import  recycling_guide_view 
+# from recycle_connect import views
+
+# urlpatterns = [
+    # path('admin/', admin.site.urls),
+    # path('', include('recycle_connect.urls')),
+    # path('recycle_connect/', include('recycle_connect.urls')),
+    # path('api/', include('recycle_connect.api_urls')),
+    # path(' recycling_guide_view/', recycling_guide_view), 
+# ]
+
+from django.conf import settings
+from django.conf.urls.static import static
+from django.urls import path, include
 from django.contrib import admin
-from django.urls import path
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', include('recycle_connect.urls')),
 ]

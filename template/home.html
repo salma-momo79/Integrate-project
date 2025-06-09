@@ -1,0 +1,132 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RecycleConnect</title>
+  <script src="https://cdn.jsdelivr.net/npm/alpinejs@3" defer></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    :root {
+      --forest-green: #507b5d;
+      --olive-green: #71936a;
+      --sage-green: #a0c18a;
+      --light-beige: #eae4aa;
+    }
+  </style>
+</head>
+<body class="bg-[var(--light-beige)] text-gray-800">
+
+  <!-- Header with Responsive Menu -->
+  <header class="bg-[var(--forest-green)] text-white shadow-lg">
+    <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+      <h1 class="text-2xl font-bold">RecycleConnect</h1>
+
+      <!-- Hamburger for Mobile -->
+      <div class="md:hidden" x-data="{ open: false }">
+        <button @click="open = !open" class="focus:outline-none">
+          <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24">
+            <path x-show="!open" fill-rule="evenodd" d="M4 6h16M4 12h16M4 18h16"/>
+            <path x-show="open" fill-rule="evenodd" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+        </button>
+        <div x-show="open" class="absolute right-6 top-16 bg-white text-[var(--forest-green)] rounded-md shadow-md w-40 py-2 z-50">
+          <a href="{% url 'home' %}" class="block px-4 py-2 hover:bg-gray-100">Home</a>
+          <a href="{% url 'recycling_guide' %}"class="block px-4 py-2 hover:bg-gray-100">Guide</a>
+          <a href="#" class="block px-4 py-2 hover:bg-gray-100">Forum</a>
+          <a href="#" class="block px-4 py-2 hover:bg-gray-100">Events</a>
+          <a href="{% url 'login' %}" class="block px-4 py-2 hover:bg-gray-100">Login</a>
+        </div>
+      </div>
+
+      <!-- Full nav for medium and up -->
+      <nav class="hidden md:flex space-x-4">
+      <a href="home" class="hover:underline">Home</a>
+        <a href="recycling_guide" class="hover:underline">Guide</a>
+        <a href="forum" class="hover:underline">Forum</a>
+        <a href="events" class="hover:underline">Events</a>
+        <a href="login" class="hover:underline">Login</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Banner -->
+  <section class="relative bg-[var(--olive-green)]">
+    <img src="{% static 'images/home.jpeg' %}" alt="Banner" class="w-full h-[600px] md:h-[500px] object-cover object-center opacity-70" />
+    <div class="absolute inset-0 flex flex-col justify-center items-center text-center text-white px-4">
+      <h2 class="text-4xl md:text-5xl font-bold mb-4 drop-shadow-lg">Empowering Communities Through Recycling</h2>
+      <p class="text-lg md:text-xl mb-6 max-w-xl drop-shadow-md">Join our mission to build a cleaner, greener future.</p>
+      <a href="{% url 'signup' %}" class="bg-[var(--sage-green)] hover:bg-green-400 text-white font-semibold px-6 py-3 rounded-full transition">Join the Movement</a>
+    </div>
+  </section>
+
+  <!-- About Section -->
+  <section class="py-16 bg-[var(--light-beige)] text-center">
+    <div class="container mx-auto px-6">
+      <h3 class="text-3xl font-bold text-[var(--forest-green)]">Why RecycleConnect?</h3>
+      <p class="text-lg text-gray-700 max-w-3xl mx-auto">
+        Every piece of waste we recycle is a step toward a cleaner, healthier, and more sustainable future. At RecycleConnect, we believe that real change begins at the community level. Our platform empowers individuals and neighborhoods by making recycling easy, accessible, and rewarding.
+      </p>
+      <p class="text-lg text-gray-700 max-w-3xl mx-auto">
+        Whether you're looking to find the nearest recycling center, learn how to dispose of tricky materials, schedule pickups, or participate in eco-friendly events—RecycleConnect has you covered. We’re not just a tool, we’re a movement.
+      </p>
+      <p class="text-lg text-gray-700 max-w-3xl mx-auto">
+        Join our growing community of changemakers and take part in local forums, monthly recycling challenges, and volunteer opportunities that make a real difference. Together, we can build a zero-waste future—one action at a time.
+      </p>
+    </div>
+  </section>
+
+  <!-- Features -->
+  <section class="py-16 bg-[var(--light-beige)]">
+    <div class="container mx-auto px-6">
+      <h3 class="text-3xl font-bold text-center text-[var(--forest-green)] mb-12">Our Features</h3>
+      <div class="grid md:grid-cols-3 gap-8">
+        
+        <!-- Card 1 -->
+        <div class="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition">
+          <h4 class="text-xl font-semibold text-[var(--forest-green)] mb-2">Local Recycling Guide</h4>
+          <p class="text-gray-700">Find what can be recycled and where in your area.</p>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition">
+          <h4 class="text-xl font-semibold text-[var(--forest-green)] mb-2">Pickup Scheduling</h4>
+          <p class="text-gray-700">Schedule pickups and get reminders for your recycling activities.</p>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition">
+          <h4 class="text-xl font-semibold text-[var(--forest-green)] mb-2">Community Forum</h4>
+          <p class="text-gray-700">Ask questions, share tips, and collaborate with others.</p>
+        </div>
+
+        <!-- Card 4 -->
+        <div class="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition">
+          <h4 class="text-xl font-semibold text-[var(--forest-green)] mb-2">Challenges & Rewards</h4>
+          <p class="text-gray-700">Take part in monthly challenges and earn rewards.</p>
+        </div>
+
+        <!-- Card 5 -->
+        <div class="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition">
+          <h4 class="text-xl font-semibold text-[var(--forest-green)] mb-2">Volunteer Opportunities</h4>
+          <p class="text-gray-700">Find local eco-volunteering events and earn certificates.</p>
+        </div>
+
+        <!-- Card 6 -->
+        <div class="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition">
+          <h4 class="text-xl font-semibold text-[var(--forest-green)] mb-2">News & Notifications</h4>
+          <p class="text-gray-700">Stay updated with tips, events, and recycling news.</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-[var(--olive-green)] text-white text-center py-6 mt-10">
+    <p>&copy; 2025 RecycleConnect. All rights reserved.</p>
+  </footer>
+
+</body>
+</html>

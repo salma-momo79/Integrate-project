@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sign Up</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      background: linear-gradient(to bottom, #53795D, #6C8A62, #9ABA85, #DAD89B);
+    }
+  </style>
+</head>
+<body class="min-h-screen flex items-center justify-center">
+  <div class="bg-white/80 backdrop-blur-lg p-10 rounded-3xl shadow-2xl w-full max-w-md">
+    <div class="text-center mb-8">
+      <h1 class="text-4xl font-extrabold text-green-700">Create Account</h1>
+      <p class="text-gray-600 text-sm mt-2">Join us and start your journey!</p>
+    </div>
+
+    <form method="POST" class="space-y-5">
+      <div>
+        <label class="block mb-1 text-gray-700 font-medium">Full Name</label>
+        <input type="text" name="full_name" placeholder="Your Name" required class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500" />
+      </div>
+      <div>
+        <label class="block mb-1 text-gray-700 font-medium">Username</label>
+        <input type="text" name="username" placeholder="Username" required class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500" />
+      </div>
+      <div>
+        <label class="block mb-1 text-gray-700 font-medium">Email Address</label>
+        <input type="email" name="email" placeholder="you@example.com" required class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500" />
+      </div>
+      <div>
+        <label class="block mb-1 text-gray-700 font-medium">Password</label>
+        <input type="password" name="password1" placeholder="Password" required class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500" />
+      </div>
+      <div>
+        <label class="block mb-1 text-gray-700 font-medium">Confirm Password</label>
+        <input type="password" name="password2" placeholder="Confirm Password" required class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500" />
+      </div>
+
+      <div>
+        <label class="block mb-1 text-gray-700 font-medium">City</label>
+        <input type="text" name="City" placeholder="Dhaka" required class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500" />
+      </div>
+
+      <div>
+        <label class="block mb-1 text-gray-700 font-medium">Address</label>
+        <input type="text" name="address" placeholder="123 Green Road, Dhaka" required class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500" />
+      </div>
+      
+      <button type="submit" class="w-full bg-green-600 hover:bg-green-700 text-white py-3 rounded-xl font-semibold transition duration-300">
+         <a href="{% url 'home' %}" class="text-green-700 font-semibold hover:underline">Sign up</a>
+      </button>
+    </form>
+
+    <p class="text-center text-gray-600 text-sm mt-6">
+      Already have an account?
+      <a href="{% url 'login' %}" class="text-green-700 font-semibold hover:underline">Login here</a>
+    </p>
+  </div>
+</body>
+</html>

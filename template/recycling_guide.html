@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>RecycleConnect</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    :root {
+      --forest-green: #507b5d;
+      --olive-green: #71936a;
+      --sage-green: #a0c18a;
+      --light-beige: #eae4aa;
+    }
+  </style>
+</head>
+<body class="bg-[var(--light-beige)] text-gray-800">
+
+  <!-- Header -->
+  <header class="bg-[var(--forest-green)] text-white p-4 text-center font-bold text-xl">Recycling Guide</header>
+
+  <!-- Search by Material -->
+  <section class="p-6">
+    <h2 class="text-2xl font-bold text-[var(--forest-green)] mb-4">Search by Material</h2>
+    <input id="searchInput" type="text" placeholder="Enter material name (e.g., plastic)" 
+           class="w-full p-3 rounded border focus:outline-none focus:ring-2 focus:ring-[var(--olive-green)] mb-4" />
+    <button onclick="searchMaterial()" 
+            class="bg-[var(--forest-green)] hover:bg-green-400 text-white px-4 py-2 rounded">Search</button>
+    
+    <div id="searchResult" class="mt-6 text-lg font-medium"></div>
+  </section>
+
+  <!-- What Can/Can't Be Recycled -->
+  <section class="p-6 bg-[var(--light-beige)] text-black mt-8">
+    <h2 class="text-2xl font-bold mb-4 text-[var(--forest-green)]">What Can/Can't Be Recycled</h2>
+    <div class="grid md:grid-cols-2 gap-8">
+      <div>
+        <h3 class="text-xl underline mb-2 text-[var(--olive-green)]"> Can Be Recycled</h3>
+        <ul class="list-disc list-inside">
+          <li>Plastic bottles (types #1 and #2)</li>
+          <li>Aluminum cans</li>
+          <li>Glass jars</li>
+          <li>Cardboard & paper</li>
+          <li>Electronics (in e-waste bins)</li>
+        </ul>
+      </div>
+      <div>
+        <h3 class="text-xl underline mb-2 text-red-600"> Can't Be Recycled</h3>
+        <ul class="list-disc list-inside">
+          <li>Plastic bags</li>
+          <li>Pizza boxes with grease</li>
+          <li>Used paper towels</li>
+          <li>Broken glass or mirrors</li>
+          <li>Hazardous chemicals</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- Nearby Recycling Centers -->
+  <section class="p-6 mt-8">
+    <h2 class="text-2xl font-bold text-[var(--forest-green)] mb-4">Nearby Recycling Centers</h2>
+    <button onclick="getLocation()" 
+            class="bg-[var(--forest-green)] text-white px-4 py-2 rounded mb-4 hover:bg-green-700">Find Centers Near Me</button>
+    <ul id="centerList" class="list-disc pl-6"></ul>
+  </section>
+
+  <!-- JavaScript -->
+  <script>
+  async function searchMaterial() {
+    const input = document.getElementById('searchInput').value.trim().toLowerCase();
+    const display = document.getElementById('searchResult');
+    display.innerText = "Searching...";
+
+    try {
+      const response = await fetch(`/api/material/?name=${input}`);
+      const data = await response.json();
+      display.innerText = data.description || data.error;
+    } catch {
+      display.innerText = "Error fetching material info.";
+    }
+  }
+
+  async function getLocation() {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(fetchCenters, () => {
+        alert("Please allow location access.");
+      });
+    } else {
+      alert("Geolocation is not supported.");
+    }
+  }
+
+  async function fetchCenters(position) {
+    const userLat = position.coords.latitude;
+    const userLng = position.coords.longitude;
+
+    try {
+      const response = await fetch('/api/centers/');
+      const centers = await response.json();
+      const list = document.getElementById("centerList");
+      list.innerHTML = "";
+
+      centers.sort((a, b) => {
+        const distA = Math.hypot(userLat - a.latitude, userLng - a.longitude);
+        const distB = Math.hypot(userLat - b.latitude, userLng - b.longitude);
+        return distA - distB;
+      }).slice(0, 3).forEach(center => {
+        const li = document.createElement("li");
+        li.innerText = `${center.name} - ${center.address}`;
+        list.appendChild(li);
+      });
+    } catch {
+      alert("Error fetching recycling centers.");
+    }
+  }
+</script>
+
+</body>
+</html>
