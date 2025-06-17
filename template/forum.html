@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Community Forum | RecycleConnect</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    :root {
+      --forest-green: #507b5d;
+      --olive-green: #71936a;
+      --sage-green: #a0c18a;
+      --light-beige: #eae4aa;
+    }
+  </style>
+</head>
+<body class="bg-[var(--light-beige)] text-gray-800 flex flex-col min-h-screen">
+
+  <header class="bg-[var(--forest-green)] text-white shadow-lg">
+    <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+      <h1 class="text-2xl font-bold">RecycleConnect</h1>
+      <nav class="hidden md:flex space-x-4">
+        <a href="index.html" class="hover:underline">Home</a>
+        <a href="recycling_guide.html" class="hover:underline">Guide</a>
+        <a href="forum.html" class="underline font-semibold">Forum</a>
+        <a href="#" class="hover:underline">Events</a>
+        <a href="login.html" class="hover:underline">Login</a>
+      </nav>
+
+      <div class="md:hidden">
+        <button id="menuButton" class="focus:outline-none">
+          <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24">
+            <path id="menuIcon" d="M4 6h16M4 12h16M4 18h16"/>
+            <path id="closeIcon" class="hidden" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+        </button>
+        <div id="mobileMenu" class="absolute right-6 top-16 bg-white text-[var(--forest-green)] rounded-md shadow-md w-40 py-2 z-50 hidden">
+          <a href="#" class="block px-4 py-2 hover:bg-gray-100">Home</a>
+          <a href="#" class="block px-4 py-2 hover:bg-gray-100">Guide</a>
+          <a href="forum.html" class="block px-4 py-2 hover:bg-gray-100 font-semibold">Forum</a>
+          <a href="#" class="block px-4 py-2 hover:bg-gray-100">Events</a>
+          <a href="#" class="block px-4 py-2 hover:bg-gray-100">Profile</a>
+          <a href="login.html" class="block px-4 py-2 hover:bg-gray-100">Login</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <section class="py-12 bg-[var(--olive-green)]">
+    <div class="container mx-auto text-center text-white">
+      <h2 class="text-3xl font-bold">Community Forum</h2>
+      <p class="mt-2">Discuss, share tips and get help from fellow recyclers.</p>
+    </div>
+  </section>
+
+  <main class="container mx-auto px-6 py-10 flex-grow">
+
+    <div class="mb-8">
+      <button
+        id="newTopicButton"
+        class="bg-[var(--sage-green)] hover:bg-green-400 text-white font-semibold px-4 py-2 rounded transition"
+      >
+        New Topic
+      </button>
+
+      <form id="newTopicForm" class="mt-6 bg-white p-6 rounded-lg shadow-md hidden">
+        <div class="mb-4">
+          <label class="block text-gray-700 mb-1">Title</label>
+          <input
+            type="text"
+            class="w-full border border-gray-300 px-3 py-2 rounded focus:outline-none focus:ring"
+            placeholder="What do you want to ask?"
+          />
+        </div>
+        <div class="mb-4">
+          <label class="block text-gray-700 mb-1">Description</label>
+          <textarea
+            rows="4"
+            class="w-full border border-gray-300 px-3 py-2 rounded focus:outline-none focus:ring"
+            placeholder="Provide more details..."
+          ></textarea>
+        </div>
+        <button
+          type="submit"
+          class="bg-[var(--forest-green)] hover:bg-green-700 text-white font-semibold px-5 py-2 rounded transition"
+        >
+          Post Topic
+        </button>
+      </form>
+    </div>
+
+    <ul class="space-y-4">
+      <li class="bg-white p-4 rounded-lg shadow-sm hover:shadow-md transition">
+        <a href="#" class="text-lg font-semibold text-[var(--forest-green)] hover:underline">
+          How can I safely recycle old electronics?
+        </a>
+        <p class="text-sm text-gray-600 mt-1">
+          Started by <strong>Irfan</strong> on June 10, 2025 &middot; 4 replies
+        </p>
+      </li>
+
+      <li class="bg-white p-4 rounded-lg shadow-sm hover:shadow-md transition">
+        <a href="#" class="text-lg font-semibold text-[var(--forest-green)] hover:underline">
+          Swap textbooks for next semester?
+        </a>
+        <p class="text-sm text-gray-600 mt-1">
+          Started by <strong>Salma</strong> on June 8, 2025 &middot; 2 replies
+        </p>
+      </li>
+    </ul>
+
+  </main>
+
+  <footer class="bg-[var(--olive-green)] text-white text-center py-6">
+    <p>&copy; 2025 RecycleConnect. All rights reserved.</p>
+  </footer>
+
+  <script>
+    const menuButton = document.getElementById('menuButton');
+    const mobileMenu = document.getElementById('mobileMenu');
+    const menuIcon = document.getElementById('menuIcon');
+    const closeIcon = document.getElementById('closeIcon');
+
+    menuButton.addEventListener('click', () => {
+      mobileMenu.classList.toggle('hidden');
+      menuIcon.classList.toggle('hidden');
+      closeIcon.classList.toggle('hidden');
+    });
+
+    const newTopicButton = document.getElementById('newTopicButton');
+    const newTopicForm = document.getElementById('newTopicForm');
+
+    newTopicButton.addEventListener('click', () => {
+      newTopicForm.classList.toggle('hidden');
+      newTopicButton.textContent = newTopicForm.classList.contains('hidden') ? 'New Topic' : 'Cancel';
+    });
+  </script>
+</body>
+</html>

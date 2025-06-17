@@ -13,3 +13,7 @@ def signup(request):
 def login(request):
     return render(request, 'login.html')
 
+def user_profile(request):
+    return render(request, 'user_profile.html')
+
+

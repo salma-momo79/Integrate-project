@@ -34,8 +34,9 @@
         <div x-show="open" class="absolute right-6 top-16 bg-white text-[var(--forest-green)] rounded-md shadow-md w-40 py-2 z-50">
           <a href="{% url 'home' %}" class="block px-4 py-2 hover:bg-gray-100">Home</a>
           <a href="{% url 'recycling_guide' %}"class="block px-4 py-2 hover:bg-gray-100">Guide</a>
-          <a href="#" class="block px-4 py-2 hover:bg-gray-100">Forum</a>
-          <a href="#" class="block px-4 py-2 hover:bg-gray-100">Events</a>
+          <a href="{% url 'forum' %}" class="block px-4 py-2 hover:bg-gray-100">Forum</a>
+          <a href="{% url 'event' %}" class="block px-4 py-2 hover:bg-gray-100">Events</a>
+          <a href="{% url 'user_profile' %}" class="block px-4 py-2 hover:bg-gray-100">Profile</a>
           <a href="{% url 'login' %}" class="block px-4 py-2 hover:bg-gray-100">Login</a>
         </div>
       </div>
@@ -45,7 +46,8 @@
       <a href="home" class="hover:underline">Home</a>
         <a href="recycling_guide" class="hover:underline">Guide</a>
         <a href="forum" class="hover:underline">Forum</a>
-        <a href="events" class="hover:underline">Events</a>
+        <a href="event" class="hover:underline">Events</a>
+        <a href="profile" class="hover:underline">Profile</a>
         <a href="login" class="hover:underline">Login</a>
       </nav>
     </div>

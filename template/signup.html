@@ -19,6 +19,7 @@
     </div>
 
     <form method="POST" class="space-y-5">
+    {% csrf_token %}
       <div>
         <label class="block mb-1 text-gray-700 font-medium">Full Name</label>
         <input type="text" name="full_name" placeholder="Your Name" required class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500" />
@@ -51,7 +52,8 @@
       </div>
       
       <button type="submit" class="w-full bg-green-600 hover:bg-green-700 text-white py-3 rounded-xl font-semibold transition duration-300">
-         <a href="{% url 'home' %}" class="text-green-700 font-semibold hover:underline">Sign up</a>
+         {% comment %} <a href="{% url 'home' %}" class="text-green-700 font-semibold hover:underline">Sign up</a> {% endcomment %}
+         Sign up
       </button>
     </form>
 

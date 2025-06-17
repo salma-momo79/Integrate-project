@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Recycling Challenges</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-green-50 min-h-screen p-6">
+
+  <div class="max-w-2xl mx-auto bg-white p-6 rounded shadow">
+    <h1 class="text-3xl font-bold mb-4">♻️ Recycling Challenges</h1>
+
+    <p class="text-lg mb-4">Your current progress: <strong>{{ user_progress }}%</strong></p>
+
+    <div class="w-full bg-gray-300 rounded-full h-4 mb-6">
+      <div class="bg-green-600 h-4 rounded-full" style="width: {{ user_progress }}%"></div>
+    </div>
+
+    <p class="mb-4">Participate in the eco-friendly recycling challenge and earn rewards!</p>
+
+    <a href="{% url 'user_profile' %}" class="inline-block bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Go to Profile</a>
+  </div>
+
+</body>
+</html>
