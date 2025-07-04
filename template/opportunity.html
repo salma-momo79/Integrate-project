@@ -1,0 +1,89 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Volunteer Opportunities</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    :root {
+      --forest-green: #507b5d;
+      --olive-green: #71936a;
+      --sage-green: #a0c18a;
+      --light-beige: #eae4aa;
+    }
+  </style>
+</head>
+<body class="bg-[var(--light-beige)] text-gray-800 min-h-screen flex flex-col font-sans">
+
+  <!-- Header -->
+  <header class="bg-[var(--forest-green)] text-white py-6 shadow-md text-center">
+    <h1 class="text-4xl font-bold">🌿 Volunteer Opportunities</h1>
+    <p class="text-sm opacity-90">Make a difference by joining local eco-events</p>
+  </header>
+
+  <!-- Main Content -->
+  <main class="container mx-auto px-6 py-10 flex-grow">
+
+    <!-- Opportunities -->
+    {% if opportunities %}
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+      {% for opp in opportunities %}
+      <div class="bg-white rounded-xl shadow-md p-6 hover:shadow-xl transition duration-300 relative">
+
+        {% if opp.image %}
+        <img src="{{ opp.image.url }}" alt="Opportunity Image" class="w-full h-44 object-cover rounded-md mb-4">
+        {% endif %}
+
+        <h2 class="text-2xl font-semibold text-[var(--forest-green)] mb-1">{{ opp.title }}</h2>
+        <p class="text-gray-600 text-sm mb-1"><strong> Location:</strong> {{ opp.location }}</p>
+        <p class="text-gray-600 text-sm mb-1"><strong> Date:</strong> {{ opp.date|date:"F j, Y" }}</p>
+        <p class="text-gray-600 text-sm mb-1"><strong> Volunteers:</strong> {{ opp.volunteersignup_set.count }} / {{ opp.max_volunteers }}</p>
+        <p class="text-gray-700 mt-2 text-sm">{{ opp.description|truncatewords:25 }}</p>
+
+        <div class="absolute top-4 right-4">
+          {% if opp.id in user_signups %}
+            <span class="bg-green-100 text-green-800 text-xs font-semibold px-3 py-1 rounded-full">Signed Up</span>
+          {% elif opp.volunteersignup_set.count >= opp.max_volunteers %}
+            <span class="bg-red-100 text-red-700 text-xs font-semibold px-3 py-1 rounded-full">Full</span>
+          {% else %}
+            <span class="bg-blue-100 text-blue-700 text-xs font-semibold px-3 py-1 rounded-full">Open</span>
+          {% endif %}
+        </div>
+
+        {% if opp.id in user_signups %}
+          <button disabled class="mt-4 w-full bg-gray-300 text-gray-600 px-4 py-2 rounded-md font-medium cursor-not-allowed">
+             Already Signed Up!
+          </button>
+        {% elif opp.volunteersignup_set.count >= opp.max_volunteers %}
+          <button disabled class="mt-4 w-full bg-red-300 text-white px-4 py-2 rounded-md font-medium cursor-not-allowed">
+            🚫 Full
+          </button>
+        {% else %}
+          <form method="POST" action="{% url 'signup_volunteer' opp.id %}" class="mt-4">
+            {% csrf_token %}
+            <button class="w-full bg-[var(--sage-green)] hover:bg-green-500 text-white px-4 py-2 rounded-md font-semibold transition duration-200">
+               Sign Up
+            </button>
+          </form>
+        {% endif %}
+
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <p class="text-center text-[var(--forest-green)] text-lg mt-10 font-medium">
+      No opportunities available right now. Please check again later.
+    </p>
+    {% endif %}
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-[var(--olive-green)] text-white text-center py-5 mt-10">
+    <p>&copy; 2025 RecycleConnect. All rights reserved.</p>
+  </footer>
+
+</body>
+</html>

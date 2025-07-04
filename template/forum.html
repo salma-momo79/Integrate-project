@@ -16,6 +16,11 @@
 </head>
 <body class="bg-[var(--light-beige)] text-gray-800 flex flex-col min-h-screen">
 
+  <div id="announcementBanner" class="bg-[var(--sage-green)] text-white text-center py-3 hidden">
+    <p class="font-semibold">🎉 New Recycling Initiative: Join our upcoming workshop on June 25, 2025! 🌍</p>
+    <button onclick="closeBanner()" class="text-white ml-4">Close</button>
+  </div>
+
   <header class="bg-[var(--forest-green)] text-white shadow-lg">
     <div class="container mx-auto px-6 py-4 flex justify-between items-center">
       <h1 class="text-2xl font-bold">RecycleConnect</h1>
@@ -35,11 +40,10 @@
           </svg>
         </button>
         <div id="mobileMenu" class="absolute right-6 top-16 bg-white text-[var(--forest-green)] rounded-md shadow-md w-40 py-2 z-50 hidden">
-          <a href="#" class="block px-4 py-2 hover:bg-gray-100">Home</a>
-          <a href="#" class="block px-4 py-2 hover:bg-gray-100">Guide</a>
+          <a href="index.html" class="block px-4 py-2 hover:bg-gray-100">Home</a>
+          <a href="recycling_guide.html" class="block px-4 py-2 hover:bg-gray-100">Guide</a>
           <a href="forum.html" class="block px-4 py-2 hover:bg-gray-100 font-semibold">Forum</a>
           <a href="#" class="block px-4 py-2 hover:bg-gray-100">Events</a>
-          <a href="#" class="block px-4 py-2 hover:bg-gray-100">Profile</a>
           <a href="login.html" class="block px-4 py-2 hover:bg-gray-100">Login</a>
         </div>
       </div>
@@ -54,6 +58,28 @@
   </section>
 
   <main class="container mx-auto px-6 py-10 flex-grow">
+
+    <div class="mb-8">
+      <h3 class="text-2xl font-semibold text-[var(--forest-green)] mb-4">Latest Announcements</h3>
+
+      <div class="bg-white p-4 rounded-lg shadow-sm hover:shadow-md transition">
+        <p class="text-lg font-semibold text-[var(--forest-green)]">
+          New Recycling Initiative Launched!
+        </p>
+        <p class="text-sm text-gray-600 mt-2">
+          We are excited to announce a new initiative to promote zero-waste recycling in urban areas. Join us in making a difference by participating in upcoming community events.
+        </p>
+      </div>
+
+      <div class="bg-white p-4 rounded-lg shadow-sm hover:shadow-md transition mt-4">
+        <p class="text-lg font-semibold text-[var(--forest-green)]">
+          Recycling Workshop on June 25, 2025
+        </p>
+        <p class="text-sm text-gray-600 mt-2">
+          Learn how to recycle efficiently and reduce waste in our hands-on workshop! Register today to secure your spot.
+        </p>
+      </div>
+    </div>
 
     <div class="mb-8">
       <button
@@ -116,6 +142,13 @@
   </footer>
 
   <script>
+    function closeBanner() {
+      document.getElementById('announcementBanner').style.display = 'none';
+    }
+    window.onload = function() {
+      document.getElementById('announcementBanner').classList.remove('hidden');
+    };
+
     const menuButton = document.getElementById('menuButton');
     const mobileMenu = document.getElementById('mobileMenu');
     const menuIcon = document.getElementById('menuIcon');

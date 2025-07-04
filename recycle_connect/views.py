@@ -1,39 +1,35 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.models import User
 from django.contrib import messages
-import os
-# from dotenv import load_dotenv
-# from django.conf import settings
-from rest_framework.decorators import api_view
-from rest_framework.response import Response
-from .models import Material, RecyclingCenter
-from .serializers import MaterialSerializer, RecyclingCenterSerializer
 from django.contrib.auth.decorators import login_required
-from .models import RecyclingProof , UserChallenge , Reward
 from django.contrib.auth import authenticate, login
 from django.views.decorators.http import require_POST
-from .models import VolunteerOpportunity, VolunteerSignup
-
-
-
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from .models import (
+    Material, RecyclingCenter,
+    RecyclingProof, UserChallenge, Reward,
+    VolunteerOpportunity, VolunteerSignup
+)
+from .serializers import MaterialSerializer, RecyclingCenterSerializer
 def home(request):
-    return render(request, 'home.html') 
+    return render(request, 'home.html')
 
 def recycling_guide_view(request):
     return render(request, 'recycling_guide.html')
 
-
 def forum(request):
-    return render(request, 'forum.html') 
+    return render(request, 'forum.html')
 
 def pickup(request):
-    return render(request, 'pickup_schedule.html') 
-
+    return render(request, 'pickup_schedule.html')
 
 def event(request):
-    return render(request, 'event.html') 
+    return render(request, 'event.html')
+def news(request):
+    return render(request, 'news.html')
 
-
+#  Auth Views 
 def signup(request):
     if request.method == 'POST':
         full_name = request.POST.get('full_name')
@@ -46,10 +42,6 @@ def signup(request):
             messages.error(request, "Passwords do not match.")
             return redirect('signup')
 
-        if User.objects.filter(username=username).exists():
-            messages.error(request, "Username already exists.")
-            return redirect('signup')
-
         if User.objects.filter(email=email).exists():
             messages.error(request, "Email already exists.")
             return redirect('signup')
@@ -60,12 +52,32 @@ def signup(request):
 
     return render(request, 'template/signup.html')
 
+def login_view(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+
+        user = authenticate(request, username=username, password=password)
+
+        if user is not None:
+            login(request, user)
+            return redirect('user_profile')
+        else:
+            messages.error(request, 'Invalid username or password.')
+            return redirect('login')
+
+    return render(request, 'login.html')
 
 
+#  Recycling Guide API 
 
 @api_view(['GET'])
 def search_material(request):
-    name = request.GET.get('name', '').lower()
+    name = request.GET.get('name', '').strip().lower()
+    
+    if not name:
+        return Response({'error': 'Please provide a material name to search.'}, status=400)
+    
     try:
         material = Material.objects.get(name__iexact=name)
         serializer = MaterialSerializer(material)
@@ -75,42 +87,20 @@ def search_material(request):
 
 @api_view(['GET'])
 def get_centers(request):
-    centers = RecyclingCenter.objects.all()
+    centers = RecyclingCenter.objects.all()  # Fetch all recycling centers
     serializer = RecyclingCenterSerializer(centers, many=True)
-    return Response(serializer.data)
+    return Response(serializer.data)  # Return the full list of centers without pagination
 
 
-
-def login_view(request):
-    if request.method == 'POST':
-        username = request.POST.get('username')
-        password = request.POST.get('password')
-
-        user = authenticate(request, username=username, password=password)
-
-        if user is not None:
-            login(request, user)  
-            return redirect('user_profile') 
-        else:
-            messages.error(request, 'Invalid username or password.')
-            return redirect('login')
-
-    return render(request, 'login.html')
-
-
-
+# Challenge Progress 
 @login_required
 def challenges_page(request):
     user_progress = 0
-
-    try:
-        challenge = UserChallenge.objects.get(user=request.user)
+    challenge = UserChallenge.objects.filter(user=request.user).first()
+    if challenge:
         user_progress = challenge.progress
-    except UserChallenge.DoesNotExist:
-        pass
 
     return render(request, 'challenges.html', {'user_progress': user_progress})
-
 
 @login_required
 def join_challenge(request):
@@ -118,7 +108,64 @@ def join_challenge(request):
         UserChallenge.objects.get_or_create(user=request.user)
     return redirect('challenges')
 
+@require_POST
+@login_required
+def update_progress(request):
+    increment = int(request.POST.get('increment', 0))
+    challenge = UserChallenge.objects.filter(user=request.user).first()
 
+    if challenge:
+        challenge.progress = min(100, challenge.progress + increment)
+        challenge.save()
+
+        # Reward if completed
+        if challenge.progress >= 100 and not Reward.objects.filter(user=request.user, title="Challenge Completed").exists():
+            Reward.objects.create(
+                user=request.user,
+                title="Challenge Completed",
+                description="Congratulations on completing the recycling challenge!"
+            )
+        messages.success(request, f"Progress updated to {challenge.progress}%")
+    else:
+        messages.error(request, "You haven't joined the challenge yet.")
+
+    return redirect('user_profile')
+
+
+# Proof Upload 
+@login_required
+def upload_proof(request):
+    if request.method == 'POST':
+        image = request.FILES.get('image')
+        challenge = UserChallenge.objects.get(user=request.user)
+
+        if RecyclingProof.objects.filter(challenge=challenge).count() >= 10:
+            messages.warning(request, "You've already uploaded 10 proofs.")
+            return redirect('user_profile')
+
+        RecyclingProof.objects.create(
+            challenge=challenge,
+            image=image,
+            verified=True
+        )
+
+        challenge.progress = min(100, challenge.progress + 10)
+        challenge.save()
+
+        if challenge.progress == 100 and not Reward.objects.filter(user=request.user, title="1000 Point Milestone").exists():
+            Reward.objects.create(
+                user=request.user,
+                title="1000 Point Milestone",
+                description="You've uploaded 10 proofs and earned 1000 points!"
+            )
+
+        messages.success(request, "Proof uploaded and auto-verified!")
+        return redirect('user_profile')
+
+    return render(request, 'upload_proof.html')
+
+
+#  User Profile 
 @login_required
 def user_profile(request):
     user = request.user
@@ -136,79 +183,42 @@ def user_profile(request):
     })
 
 
-
-@require_POST
-@login_required
-def update_progress(request):
-    increment = int(request.POST.get('increment', 0))
-    try:
-        challenge = UserChallenge.objects.get(user=request.user)
-        challenge.progress = min(100, challenge.progress + increment)
-        challenge.save()
-
-        # Reward logic: only if 100% and not already rewarded
-        if challenge.progress >= 100 and not Reward.objects.filter(user=request.user, title="Challenge Completed").exists():
-            Reward.objects.create(
-                user=request.user,
-                title="Challenge Completed",
-                description="Congratulations on completing the recycling challenge!"
-            )
-
-        messages.success(request, f"Progress updated to {challenge.progress}%")
-
-    except UserChallenge.DoesNotExist:
-        messages.error(request, "You haven't joined the challenge yet.")
-
-    return redirect('user_profile')
-
-def upload_proof(request):
-    if request.method == 'POST':
-        image = request.FILES.get('image')
-        challenge = UserChallenge.objects.get(user=request.user)
-
-        # Only allow 1 proof per challenge
-        if RecyclingProof.objects.filter(challenge=challenge).count() >= 10:
-            messages.warning(request, "You've already uploaded 10 proofs for this challenge.")
-            return redirect('user_profile')
-
-        # Save proof
-        RecyclingProof.objects.create(
-            challenge=challenge,
-            image=image,
-            verified=True
-        )
-
-        # Update progress by 10 points per proof
-        challenge.progress = min(100, challenge.progress + 10)
-        challenge.save()
-
-        # If user has uploaded 10 proofs (1000 points), give reward
-        total_proofs = RecyclingProof.objects.filter(challenge=challenge).count()
-        if total_proofs == 10 and not Reward.objects.filter(user=request.user, title="1000 Point Milestone").exists():
-            Reward.objects.create(
-                user=request.user,
-                title="1000 Point Milestone",
-                description="You've uploaded 10 proofs and earned 1000 points!"
-            )
-
-        messages.success(request, "Proof uploaded and auto-verified!")
-        return redirect('user_profile')
-
-    return render(request, 'upload_proof.html')
+#  Volunteer Features 
 @login_required
 def volunteer_opportunities(request):
-    opportunities = VolunteerOpportunity.objects.all()
-    signups = VolunteerSignup.objects.filter(user=request.user).values_list('opportunity_id', flat=True)
+    query = request.GET.get('q')
+    if query:
+        opportunities = VolunteerOpportunity.objects.filter(title__icontains=query)
+    else:
+        opportunities = VolunteerOpportunity.objects.all()
 
-    return render(request, 'volunteer_opportunities.html', {
+    user_signups = VolunteerSignup.objects.filter(user=request.user).values_list('opportunity_id', flat=True)
+
+    return render(request, 'opportunity.html', {
         'opportunities': opportunities,
-        'user_signups': signups,
+        'user_signups': user_signups,
     })
+
 
 
 @login_required
 def volunteer_signup(request, opportunity_id):
-    opportunity = VolunteerOpportunity.objects.get(id=opportunity_id)
-    VolunteerSignup.objects.get_or_create(user=request.user, opportunity=opportunity)
-    messages.success(request, f"You've signed up for: {opportunity.title}")
+    opportunity = get_object_or_404(VolunteerOpportunity, id=opportunity_id)
+    signup, created = VolunteerSignup.objects.get_or_create(user=request.user, opportunity=opportunity)
+
+    if created:
+        messages.success(request, f"You've signed up for: {opportunity.title}")
+    else:
+        messages.info(request, f"You're already signed up for: {opportunity.title}")
+
     return redirect('volunteer_opportunities')
+
+
+# Track Hours View 
+@login_required
+def track_volunteer_hours(request):
+    signups = VolunteerSignup.objects.filter(user=request.user)
+
+    return render(request, 'volunteer/track_hours.html', {
+        'signups': signups
+    })

@@ -1,119 +1,196 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>RecycleConnect</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <style>
-    :root {
-      --forest-green: #507b5d;
-      --olive-green: #71936a;
-      --sage-green: #a0c18a;
-      --light-beige: #eae4aa;
-    }
-  </style>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Recycling Guide</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        :root {
+            --forest-green: #507b5d;
+            --olive-green: #71936a;
+            --sage-green: #a0c18a;
+            --light-beige: #eae4aa;
+        }
+    </style>
 </head>
 <body class="bg-[var(--light-beige)] text-gray-800">
 
-  <!-- Header -->
-  <header class="bg-[var(--forest-green)] text-white p-4 text-center font-bold text-xl">Recycling Guide</header>
+    <!-- Header -->
+    <header class="bg-[var(--forest-green)] text-white p-4 text-center font-bold text-xl">
+        Recycling Guide
+    </header>
 
-  <!-- Search by Material -->
-  <section class="p-6">
-    <h2 class="text-2xl font-bold text-[var(--forest-green)] mb-4">Search by Material</h2>
-    <input id="searchInput" type="text" placeholder="Enter material name (e.g., plastic)" 
-           class="w-full p-3 rounded border focus:outline-none focus:ring-2 focus:ring-[var(--olive-green)] mb-4" />
-    <button onclick="searchMaterial()" 
-            class="bg-[var(--forest-green)] hover:bg-green-400 text-white px-4 py-2 rounded">Search</button>
+    <!-- Search by Material -->
+    <section class="p-6">
+        <h2 class="text-2xl font-bold text-[var(--forest-green)] mb-4">Search by Material</h2>
+        <input id="searchInput" type="text" placeholder="Enter material name (e.g., plastic)"
+               class="w-full p-3 rounded border focus:outline-none focus:ring-2 focus:ring-[var(--olive-green)] mb-4"
+               oninput="searchMaterial()" />
+        <button onclick="searchMaterial()" class="bg-[var(--forest-green)] hover:bg-green-400 text-white px-4 py-2 rounded">
+            Search
+        </button>
+
+        <div id="searchResult" class="mt-6 text-lg font-medium">
+            {% for material in materials %}
+                <div>
+                    <strong>{{ material.name }}</strong>
+                    <p>{{ material.description }}</p>
+                    {% if material.image %}
+                        <img src="{{ material.image.url }}" alt="{{ material.name }}" class="w-20 h-20 object-cover" />
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+    </section>
+
+    <!-- What Can/Can't Be Recycled -->
+    <section class="p-6 bg-[var(--light-beige)] text-black mt-8">
+        <h2 class="text-2xl font-bold mb-4 text-[var(--forest-green)]">What Can/Can't Be Recycled</h2>
+        <div class="grid md:grid-cols-2 gap-8">
+            <div>
+                <h3 class="text-xl underline mb-2 text-[var(--olive-green)]"> Can Be Recycled</h3>
+                <ul class="list-disc list-inside">
+                    <li>Plastic bottles (types #1 and #2)</li>
+                    <li>Aluminum cans</li>
+                    <li>Glass jars</li>
+                    <li>Cardboard & paper</li>
+                    <li>Electronics (in e-waste bins)</li>
+                </ul>
+            </div>
+            <div>
+                <h3 class="text-xl underline mb-2 text-red-600"> Can't Be Recycled</h3>
+                <ul class="list-disc list-inside">
+                    <li>Plastic bags</li>
+                    <li>Pizza boxes with grease</li>
+                    <li>Used paper towels</li>
+                    <li>Broken glass or mirrors</li>
+                    <li>Hazardous chemicals</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- Nearby Recycling Centers Section -->
+    <section class="p-6 mt-8">
+      <h2 class="text-2xl font-bold text-[var(--forest-green)] mb-4">Nearby Recycling Centers</h2>
+
+      <button onclick="getLocation()"
+            class="bg-[var(--forest-green)] text-white px-4 py-2 rounded mb-4 hover:bg-green-700">
+        Find Centers Near Me
+      </button>
+
+      <!-- Display List of Centers -->
+      <ul id="centerList" class="list-disc pl-6"></ul>
+
     
-    <div id="searchResult" class="mt-6 text-lg font-medium"></div>
-  </section>
-
-  <!-- What Can/Can't Be Recycled -->
-  <section class="p-6 bg-[var(--light-beige)] text-black mt-8">
-    <h2 class="text-2xl font-bold mb-4 text-[var(--forest-green)]">What Can/Can't Be Recycled</h2>
-    <div class="grid md:grid-cols-2 gap-8">
-      <div>
-        <h3 class="text-xl underline mb-2 text-[var(--olive-green)]"> Can Be Recycled</h3>
-        <ul class="list-disc list-inside">
-          <li>Plastic bottles (types #1 and #2)</li>
-          <li>Aluminum cans</li>
-          <li>Glass jars</li>
-          <li>Cardboard & paper</li>
-          <li>Electronics (in e-waste bins)</li>
-        </ul>
+      <div id="centerDetails" class="mt-6 hidden">
+        <h3 class="text-xl font-bold" id="centerName"></h3>
+        <p><strong>Address:</strong> <span id="centerAddress"></span></p>
+        <p><strong>Distance:</strong> <span id="centerDistance"></span> km</p>
+        <p><strong>Accepted Materials:</strong> <span id="acceptedMaterials"></span></p>
+        <p><strong>Operating Hours:</strong> <span id="workingHours"></span></p>
+        <button id="directionsButton" class="bg-[var(--olive-green)] text-white px-4 py-2 rounded hover:bg-green-500">
+            Get Directions
+        </button>
       </div>
-      <div>
-        <h3 class="text-xl underline mb-2 text-red-600"> Can't Be Recycled</h3>
-        <ul class="list-disc list-inside">
-          <li>Plastic bags</li>
-          <li>Pizza boxes with grease</li>
-          <li>Used paper towels</li>
-          <li>Broken glass or mirrors</li>
-          <li>Hazardous chemicals</li>
-        </ul>
-      </div>
-    </div>
-  </section>
 
-  <!-- Nearby Recycling Centers -->
-  <section class="p-6 mt-8">
-    <h2 class="text-2xl font-bold text-[var(--forest-green)] mb-4">Nearby Recycling Centers</h2>
-    <button onclick="getLocation()" 
-            class="bg-[var(--forest-green)] text-white px-4 py-2 rounded mb-4 hover:bg-green-700">Find Centers Near Me</button>
-    <ul id="centerList" class="list-disc pl-6"></ul>
-  </section>
+      <!-- Google Map -->
+      <div id="map" class="mt-6" style="height: 400px;"></div>
+    </section>
 
-  <!-- JavaScript -->
-  <script>
-  async function searchMaterial() {
-    const input = document.getElementById('searchInput').value.trim().toLowerCase();
-    const display = document.getElementById('searchResult');
-    display.innerText = "Searching...";
 
-    try {
-      const response = await fetch(`/api/material/?name=${input}`);
-      const data = await response.json();
-      display.innerText = data.description || data.error;
-    } catch {
-      display.innerText = "Error fetching material info.";
-    }
+    <!-- JavaScript -->
+    <script>
+        async function searchMaterial() {
+            const input = document.getElementById('searchInput').value.trim();
+            const display = document.getElementById('searchResult');
+
+            if (!input) {
+                display.innerHTML = '';
+                return;
+            }
+
+            display.innerText = "Searching...";
+
+            try {
+                const response = await fetch(`/api/search-material/?name=${input}`);
+                const data = await response.json();
+
+                if (response.ok) {
+                    display.innerHTML = '';
+
+                    if (data.length > 0) {
+                        data.forEach(material => {
+                            const div = document.createElement('div');
+                            div.classList.add('material-result');
+                            div.innerHTML = `<strong>${material.name}</strong><p>${material.description}</p>`;
+                            display.appendChild(div);
+                        });
+                    } else {
+                        display.innerHTML = 'No materials found.';
+                    }
+                } else {
+                    display.innerHTML = data.error || 'Error fetching material data';
+                }
+            } catch (error) {
+                display.innerText = 'Error fetching material info.';
+            }
+        }
+        async function getLocation() {
+       if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(fetchCenters, () => {
+            alert("Please allow location access.");
+        });
+       } else {
+        alert("Geolocation is not supported.");
+       }
   }
 
-  async function getLocation() {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(fetchCenters, () => {
-        alert("Please allow location access.");
-      });
-    } else {
-      alert("Geolocation is not supported.");
-    }
-  }
-
-  async function fetchCenters(position) {
+    async function fetchCenters(position) {
     const userLat = position.coords.latitude;
     const userLng = position.coords.longitude;
 
     try {
-      const response = await fetch('/api/centers/');
-      const centers = await response.json();
-      const list = document.getElementById("centerList");
-      list.innerHTML = "";
+        const response = await fetch(`/api/centers/?latitude=${userLat}&longitude=${userLng}`);
+        const centers = await response.json();
+        const list = document.getElementById("centerList");
+        list.innerHTML = "";  
 
-      centers.sort((a, b) => {
-        const distA = Math.hypot(userLat - a.latitude, userLng - a.longitude);
-        const distB = Math.hypot(userLat - b.latitude, userLng - b.longitude);
-        return distA - distB;
-      }).slice(0, 3).forEach(center => {
-        const li = document.createElement("li");
-        li.innerText = `${center.name} - ${center.address}`;
-        list.appendChild(li);
-      });
+        
+        centers.sort((a, b) => {
+            const distA = Math.hypot(userLat - a.latitude, userLng - a.longitude);
+            const distB = Math.hypot(userLat - b.latitude, userLng - b.longitude);
+            return distA - distB;
+        }).slice(0, 3).forEach(center => {
+        
+            const li = document.createElement("li");
+            li.innerText = `${center.name} - ${center.distance} km away`;
+            li.onclick = () => showCenterDetails(center); 
+            list.appendChild(li);
+        });
     } catch {
-      alert("Error fetching recycling centers.");
+        alert("Error fetching recycling centers.");
     }
-  }
+}
+
+
+  function showCenterDetails(center) {
+    document.getElementById("centerDetails").classList.remove("hidden");  
+
+    document.getElementById("centerName").innerText = center.name;
+    document.getElementById("centerAddress").innerText = center.address;
+    document.getElementById("centerDistance").innerText = `${center.distance} km`;
+    document.getElementById("acceptedMaterials").innerText = center.accepted_materials.join(", ");
+    document.getElementById("workingHours").innerText = center.working_hours;
+
+  
+    const directionsUrl = `https://www.google.com/maps/dir/?api=1&destination=${center.latitude},${center.longitude}`;
+    document.getElementById("directionsButton").onclick = () => {
+        window.open(directionsUrl, "_blank");  
+    };
+}
+
 </script>
 
 </body>

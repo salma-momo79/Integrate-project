@@ -4,9 +4,11 @@ from django.contrib.auth.models import User
 class Material(models.Model):
     name = models.CharField(max_length=100, unique=True)
     description = models.TextField()
+    image = models.ImageField(upload_to='materials/', null=True, blank=True)  # Optional image for materials
 
     def __str__(self):
         return self.name
+
 
 class RecyclingCenter(models.Model):
     name = models.CharField(max_length=200)
@@ -16,6 +18,8 @@ class RecyclingCenter(models.Model):
 
     def __str__(self):
         return self.name
+    
+
 
 
 class UserChallenge(models.Model):
@@ -41,20 +45,20 @@ class Reward(models.Model):
     def __str__(self):
         return f"{self.title} - {self.user.username}"
 
-
 class VolunteerOpportunity(models.Model):
     title = models.CharField(max_length=255)
     description = models.TextField()
     location = models.CharField(max_length=255)
     date = models.DateField()
+    max_volunteers = models.PositiveIntegerField(default=20)
+    image = models.ImageField(upload_to='opportunities/', null=True, blank=True)
 
     def __str__(self):
         return self.title
 
-
 class VolunteerSignup(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    opportunity = models.ForeignKey(VolunteerOpportunity, on_delete=models.CASCADE)
+    opportunity = models.ForeignKey(VolunteerOpportunity, on_delete=models.CASCADE, related_name='volunteersignup_set')
     hours_completed = models.PositiveIntegerField(default=0)
     certified = models.BooleanField(default=False)
 

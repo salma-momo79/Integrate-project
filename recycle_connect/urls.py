@@ -12,6 +12,7 @@ urlpatterns = [
     path('recycling_guide/', views.recycling_guide_view, name='recycling_guide'),
     path('signup/', views.signup, name='signup'),
     path('login/', views.login_view, name='login'),
+    path('logout/', auth_views.LogoutView.as_view(next_page='home'), name='logout'),
     path('api/material/', views.search_material),
     path('api/centers/', views.get_centers),
     path('profile/', views.user_profile, name='user_profile'),
@@ -24,8 +25,13 @@ urlpatterns = [
     path('forum/', views.forum, name='forum'),
     path('pickup/', views.pickup, name='pickup'),
     path('event/', views.event, name='event'),
+    path('news/', views.news, name='news'),
     path('volunteer/', views.volunteer_opportunities, name='volunteer_opportunities'),
     path('volunteer/signup/<int:opportunity_id>/', views.volunteer_signup, name='volunteer_signup'),
+    path('volunteer/', views.volunteer_opportunities, name='volunteer_opportunities'),
+    path('volunteer/track/', views.track_volunteer_hours, name='track_volunteer_hours'),
+   path('volunteer/signup/<int:opportunity_id>/', views.volunteer_signup, name='signup_volunteer'),
+
 
        
 ]

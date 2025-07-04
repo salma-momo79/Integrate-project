@@ -35,7 +35,9 @@
           <a href="{% url 'home' %}" class="block px-4 py-2 hover:bg-gray-100">Home</a>
           <a href="{% url 'recycling_guide' %}"class="block px-4 py-2 hover:bg-gray-100">Guide</a>
           <a href="{% url 'forum' %}" class="block px-4 py-2 hover:bg-gray-100">Forum</a>
+          <a href="{% url 'pickup' %}" class="block px-4 py-2 hover:bg-gray-100">Pickup</a>
           <a href="{% url 'event' %}" class="block px-4 py-2 hover:bg-gray-100">Events</a>
+          <a href="{% url 'news' %}" class="block px-4 py-2 hover:bg-gray-100">News</a>
           <a href="{% url 'user_profile' %}" class="block px-4 py-2 hover:bg-gray-100">Profile</a>
           <a href="{% url 'login' %}" class="block px-4 py-2 hover:bg-gray-100">Login</a>
         </div>
@@ -46,7 +48,9 @@
       <a href="home" class="hover:underline">Home</a>
         <a href="recycling_guide" class="hover:underline">Guide</a>
         <a href="forum" class="hover:underline">Forum</a>
+        <a href="pickup" class="hover:underline">Pickup</a>
         <a href="event" class="hover:underline">Events</a>
+        <a href="news" class="hover:underline">News</a>
         <a href="profile" class="hover:underline">Profile</a>
         <a href="login" class="hover:underline">Login</a>
       </nav>
@@ -86,41 +90,45 @@
       <div class="grid md:grid-cols-3 gap-8">
         
         <!-- Card 1 -->
-        <div class="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition">
-          <h4 class="text-xl font-semibold text-[var(--forest-green)] mb-2">Local Recycling Guide</h4>
-          <p class="text-gray-700">Find what can be recycled and where in your area.</p>
-        </div>
+        <a href="{% url 'recycling_guide' %}" class="block bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition hover:bg-gray-50">
+        <h4 class="text-xl font-semibold text-[var(--forest-green)] mb-2">Local Recycling Guide</h4>
+        <p class="text-gray-700">Find what can be recycled and where in your area.</p>
+        </a>
+
 
         <!-- Card 2 -->
-        <div class="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition">
-          <h4 class="text-xl font-semibold text-[var(--forest-green)] mb-2">Pickup Scheduling</h4>
-          <p class="text-gray-700">Schedule pickups and get reminders for your recycling activities.</p>
-        </div>
+        <a href="{% url 'pickup' %}" class="block bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition hover:bg-gray-50">
+        <h4 class="text-xl font-semibold text-[var(--forest-green)] mb-2">Pickup Scheduling</h4>
+        <p class="text-gray-700">Schedule pickups and get reminders for your recycling activities.</p>
+        </a>
+
 
         <!-- Card 3 -->
-        <div class="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition">
-          <h4 class="text-xl font-semibold text-[var(--forest-green)] mb-2">Community Forum</h4>
-          <p class="text-gray-700">Ask questions, share tips, and collaborate with others.</p>
-        </div>
+        <a href="{% url 'forum' %}" class="block bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition hover:bg-gray-50">
+        <h4 class="text-xl font-semibold text-[var(--forest-green)] mb-2">Community Forum</h4>
+        <p class="text-gray-700">Ask questions, share tips, and collaborate with others.</p>
+        </a>
+
 
         <!-- Card 4 -->
-        <div class="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition">
-          <h4 class="text-xl font-semibold text-[var(--forest-green)] mb-2">Challenges & Rewards</h4>
-          <p class="text-gray-700">Take part in monthly challenges and earn rewards.</p>
-        </div>
+       <a href="{% url 'challenges' %}" class="block bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition hover:bg-gray-50">
+       <h4 class="text-xl font-semibold text-[var(--forest-green)] mb-2">Challenges & Rewards</h4>
+       <p class="text-gray-700">Take part in monthly challenges and earn rewards.</p>
+       </a>
+
 
         <!-- Card 5 -->
-        <div class="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition">
-          <h4 class="text-xl font-semibold text-[var(--forest-green)] mb-2">Volunteer Opportunities</h4>
-          <p class="text-gray-700">Find local eco-volunteering events and earn certificates.</p>
-        </div>
+        <a href="{% url 'event' %}" class="block bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition hover:bg-gray-50">
+        <h4 class="text-xl font-semibold text-[var(--forest-green)] mb-2">Volunteer Opportunities</h4>
+        <p class="text-gray-700">Find local eco-volunteering events and earn certificates.</p>
+        </a>
+
 
         <!-- Card 6 -->
-        <div class="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition">
-          <h4 class="text-xl font-semibold text-[var(--forest-green)] mb-2">News & Notifications</h4>
-          <p class="text-gray-700">Stay updated with tips, events, and recycling news.</p>
-        </div>
-
+        <a href="{% url 'news' %}" class="block bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition hover:bg-gray-50">
+        <h4 class="text-xl font-semibold text-[var(--forest-green)] mb-2">News & Notifications</h4>
+        <p class="text-gray-700">Stay updated with tips, events, and recycling news.</p>
+        </a>
       </div>
     </div>
   </section>
