@@ -8,15 +8,19 @@ import os
 #     safe_name = slugify(name) 
 #     return f"materials/{safe_name}{ext.lower()}"
 import os
+import uuid
 from django.utils.text import slugify
 
 def material_image_upload_path(instance, filename):
-    name, ext = os.path.splitext(filename)
-    safe_name = slugify(name)
-    material_slug = slugify(instance.name)
-    instance_id = instance.id or 'new'
-    return f"materials/{material_slug}/{instance_id}_{safe_name}{ext.lower()}"
+    ext = os.path.splitext(filename)[1].lower()  
+    material_slug = slugify(instance.name)       
 
+    unique_id = uuid.uuid4().hex                  
+    filename = f"{unique_id}{ext}"
+
+    return f"materials/{material_slug}/{filename}"
+import os
+from django.db import models
 
 class Material(models.Model):
     name = models.CharField(max_length=100)
@@ -25,6 +29,19 @@ class Material(models.Model):
 
     def __str__(self):
         return self.name
+
+    def save(self, *args, **kwargs):
+        try:
+            old = Material.objects.get(pk=self.pk)
+        except Material.DoesNotExist:
+            old = None
+
+        super().save(*args, **kwargs) 
+
+        if old and old.image and old.image != self.image:
+            if os.path.isfile(old.image.path):
+                os.remove(old.image.path)
+
 
 class RecyclingCenter(models.Model):
     name = models.CharField(max_length=200)

@@ -82,8 +82,35 @@
     </div>
   </div>
 
-  <footer class="bg-[var(--forest-green)] text-white text-center p-4 mt-auto">
-    &copy; {{ now.year }} Recycling Guide. All rights reserved.
+  <!-- Footer -->
+  <footer class="bg-[var(--dark-green)] text-white text-center py-6 mt-10">
+    <div class="max-w-7xl mx-auto py-6 px-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 text-sm">
+      <div>
+        <h2 class="font-bold mb-2">RecycleConnect</h2>
+        <p>Empowering communities through recycling.</p>
+      </div>
+      <div>
+        <h2 class="font-bold mb-2">Quick Links</h2>
+        <ul class="space-y-1">
+    
+          <li><a href="{% url 'home' %}" class="hover:underline">Home</a></li>
+          <li><a href="{% url 'recycling_guide' %}" class="hover:underline">Recycling Guide</a></li>
+          <li><a href="{% url 'forum' %}" class="hover:underline">Forum</a></li>
+          <li><a href="{% url 'pickup' %}" class="hover:underline">Pickup</a></li>
+          <li><a href="{% url 'event' %}" class="hover:underline">Event</a></li>
+          <li><a href="{% url 'news' %}" class="hover:underline">News</a></li>
+        
+
+          
+        </ul>
+      </div>
+      <div>
+        <h2 class="font-bold mb-2">Contact</h2>
+        <p>Email: recycleconnect@baiust.edu</p>
+        <p>Facebook: @RecycleConnect</p>
+      </div>
+    </div>
+    <div class="text-center bg-green-800 text-xs py-3">{% now "Y" %} RecycleConnect. All rights reserved.</div>
   </footer>
 
   <script>
