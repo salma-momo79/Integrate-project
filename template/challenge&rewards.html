@@ -44,21 +44,16 @@
 </head>
 <body class="text-gray-900 font-sans leading-relaxed">
 
-  <!-- Header -->
   <header class="header-bg text-white text-center p-6 shadow-md">
     <h1 class="text-3xl font-bold">Recycling Challenges & Rewards</h1>
     <p class="text-lg mt-2">Inspire. Act. Earn.</p>
   </header>
 
-  <!-- Main Section -->
   <section class="section-bg px-6 py-10">
     <div class="max-w-4xl mx-auto space-y-10">
-
-      <!-- Monthly Eco-Challenges -->
       <div class="bg-white shadow-lg rounded-xl p-6">
         <div class="flex justify-between items-center">
           <h2 class="text-2xl font-semibold text-green-800">🌱 Monthly Eco-Challenges</h2>
-          <!-- Join Challenge Button -->
           {% if user.is_authenticated %}
             <form action="{% url 'join_challenge' %}" method="POST">
               {% csrf_token %}
@@ -74,15 +69,11 @@
           Participate in exciting monthly challenges designed to help you recycle more effectively and raise awareness in your community.
         </p>
       </div>
-
-      <!-- Points and Rewards -->
       <div class="bg-white shadow-lg rounded-xl p-6">
         <h2 class="text-2xl font-semibold text-green-800">🏆 Earn Points & Rewards</h2>
         <p class="mt-2 text-gray-700">
           Earn points every time you complete an eco-challenge. At the end of every 6 months, receive rewards based on your performance.
         </p>
-
-        <!-- Progress Tracking -->
         <div class="mt-4">
           <p class="text-sm text-gray-600 mb-1">Your Progress:</p>
           <div class="progress-bar">
@@ -94,11 +85,8 @@
 
     </div>
   </section>
-
-  <!-- Footer -->
   <footer class="text-center p-4 text-sm text-gray-700">
     © 2025 RecycleConnect. All rights reserved.
   </footer>
-
 </body>
 </html>

@@ -1,172 +1,240 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Community Forum | RecycleConnect</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Forum | RecycleConnect</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     :root {
-      --forest-green: #507b5d;
-      --olive-green: #71936a;
-      --sage-green: #a0c18a;
-      --light-beige: #eae4aa;
+      --light-green: #a7f3d0;
+      --dark-green: #065f46;
+      --forest-green: #064e3b;
+      --background-gradient-start: #f0fdf4;
+      --background-gradient-end: #e6ffe6;
     }
+    body {
+      background: linear-gradient(to right, var(--background-gradient-start), var(--background-gradient-end));
+    }
+    .text-forest-green { color: var(--forest-green); }
+    .bg-forest-green { background-color: var(--forest-green); }
+    .hover-bg-dark-green:hover { background-color: var(--dark-green); }
   </style>
 </head>
-<body class="bg-[var(--light-beige)] text-gray-800 flex flex-col min-h-screen">
-
-  <div id="announcementBanner" class="bg-[var(--sage-green)] text-white text-center py-3 hidden">
-    <p class="font-semibold">🎉 New Recycling Initiative: Join our upcoming workshop on June 25, 2025! 🌍</p>
-    <button onclick="closeBanner()" class="text-white ml-4">Close</button>
-  </div>
-
-  <header class="bg-[var(--forest-green)] text-white shadow-lg">
+<body class="min-h-screen flex flex-col">
+  <header class="bg-forest-green text-white">
     <div class="container mx-auto px-6 py-4 flex justify-between items-center">
       <h1 class="text-2xl font-bold">RecycleConnect</h1>
-      <nav class="hidden md:flex space-x-4">
-        <a href="index.html" class="hover:underline">Home</a>
-        <a href="recycling_guide.html" class="hover:underline">Guide</a>
-        <a href="forum.html" class="underline font-semibold">Forum</a>
-        <a href="#" class="hover:underline">Events</a>
-        <a href="login.html" class="hover:underline">Login</a>
-      </nav>
+      <nav class="space-x-6 hidden md:flex">
+        <a href="{% url 'home' %}" class="hover:text-green-200">Home</a>
+        <a href="{% url 'recycling_guide' %}" class="hover:text-green-200">Guide</a>
+        <a href="{% url 'forum' %}" class="hover:text-green-200">Forum</a>
+        <a href="{% url 'pickup' %}" class="hover:text-green-200">Pickup</a>
+        <a href="{% url 'event' %}" class="hover:text-green-200">Events</a>
+        <a href="{% url 'news' %}" class="hover:text-green-200">News</a>
 
-      <div class="md:hidden">
-        <button id="menuButton" class="focus:outline-none">
-          <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24">
-            <path id="menuIcon" d="M4 6h16M4 12h16M4 18h16"/>
-            <path id="closeIcon" class="hidden" d="M6 18L18 6M6 6l12 12"/>
-          </svg>
-        </button>
-        <div id="mobileMenu" class="absolute right-6 top-16 bg-white text-[var(--forest-green)] rounded-md shadow-md w-40 py-2 z-50 hidden">
-          <a href="index.html" class="block px-4 py-2 hover:bg-gray-100">Home</a>
-          <a href="recycling_guide.html" class="block px-4 py-2 hover:bg-gray-100">Guide</a>
-          <a href="forum.html" class="block px-4 py-2 hover:bg-gray-100 font-semibold">Forum</a>
-          <a href="#" class="block px-4 py-2 hover:bg-gray-100">Events</a>
-          <a href="login.html" class="block px-4 py-2 hover:bg-gray-100">Login</a>
-        </div>
-      </div>
+        {% if user.is_authenticated %}
+          <a href="{% url 'user_profile' %}" class="hover:underline">Profile</a>
+          <form action="{% url 'logout' %}" method="POST" class="inline">
+            {% csrf_token %}
+            <button type="submit" class="hover:underline">Logout</button>
+          </form>
+        {% else %}
+          <a href="{% url 'login' %}" class="hover:underline">Login</a>
+          <a href="{% url 'signup' %}" class="hover:underline">Sign Up</a>
+        {% endif %}
+      </nav>
     </div>
   </header>
+  <main class="container mx-auto flex-grow px-6 py-10">
 
-  <section class="py-12 bg-[var(--olive-green)]">
-    <div class="container mx-auto text-center text-white">
-      <h2 class="text-3xl font-bold">Community Forum</h2>
-      <p class="mt-2">Discuss, share tips and get help from fellow recyclers.</p>
-    </div>
-  </section>
+    {% if polls %}
+    <section class="mb-12">
+      <h2 class="text-2xl font-bold text-forest-green mb-6">🗳️ Current Polls</h2>
+      <div class="space-y-6">
+        {% for poll in polls %}
+        <div class="bg-white p-5 rounded-lg shadow border border-green-200 hover:bg-[--light-green] transition">
+          <h3 class="text-lg font-bold text-forest-green mb-4">{{ poll.question }}</h3>
 
-  <main class="container mx-auto px-6 py-10 flex-grow">
+          {% with total_votes=0 %}
+            {% for option in poll.options.all %}
+              {% with total_votes=total_votes|add:option.votes.count %}
+              {% endwith %}
+            {% endfor %}
+          {% endwith %}
 
-    <div class="mb-8">
-      <h3 class="text-2xl font-semibold text-[var(--forest-green)] mb-4">Latest Announcements</h3>
+          {% for option in poll.options.all %}
+            {% with vote_count=option.votes.count %}
+              {% if total_votes > 0 %}
+                {% widthratio vote_count total_votes 100 as percent %}
+              {% else %}
+                {% with percent=0 %}
+                {% endwith %}
+              {% endif %}
+              <div class="mb-4">
+                <div class="flex justify-between text-sm text-gray-700">
+                  <span>{{ option.text }}</span>
+                  <span>{{ vote_count }} vote{{ vote_count|pluralize }} ({{ percent }}%)</span>
+                </div>
+                <div class="w-full bg-gray-200 h-4 mt-1 rounded-full">
+                  <div class="bg-forest-green h-4 rounded-full transition-all duration-300" style="width: {{ percent }}%"></div>
+                </div>
+              </div>
+            {% endwith %}
+          {% endfor %}
 
-      <div class="bg-white p-4 rounded-lg shadow-sm hover:shadow-md transition">
-        <p class="text-lg font-semibold text-[var(--forest-green)]">
-          New Recycling Initiative Launched!
-        </p>
-        <p class="text-sm text-gray-600 mt-2">
-          We are excited to announce a new initiative to promote zero-waste recycling in urban areas. Join us in making a difference by participating in upcoming community events.
-        </p>
-      </div>
-
-      <div class="bg-white p-4 rounded-lg shadow-sm hover:shadow-md transition mt-4">
-        <p class="text-lg font-semibold text-[var(--forest-green)]">
-          Recycling Workshop on June 25, 2025
-        </p>
-        <p class="text-sm text-gray-600 mt-2">
-          Learn how to recycle efficiently and reduce waste in our hands-on workshop! Register today to secure your spot.
-        </p>
-      </div>
-    </div>
-
-    <div class="mb-8">
-      <button
-        id="newTopicButton"
-        class="bg-[var(--sage-green)] hover:bg-green-400 text-white font-semibold px-4 py-2 rounded transition"
-      >
-        New Topic
-      </button>
-
-      <form id="newTopicForm" class="mt-6 bg-white p-6 rounded-lg shadow-md hidden">
-        <div class="mb-4">
-          <label class="block text-gray-700 mb-1">Title</label>
-          <input
-            type="text"
-            class="w-full border border-gray-300 px-3 py-2 rounded focus:outline-none focus:ring"
-            placeholder="What do you want to ask?"
-          />
+          <p class="text-sm text-gray-500 mt-2 text-right">Total Votes: {{ total_votes }}</p>
+          <div class="mt-3">
+            <a href="{% url 'poll_detail' poll.id %}" class="text-blue-600 text-sm hover:underline">➡️ Vote Now</a>
+          </div>
         </div>
-        <div class="mb-4">
-          <label class="block text-gray-700 mb-1">Description</label>
-          <textarea
-            rows="4"
-            class="w-full border border-gray-300 px-3 py-2 rounded focus:outline-none focus:ring"
-            placeholder="Provide more details..."
-          ></textarea>
-        </div>
-        <button
-          type="submit"
-          class="bg-[var(--forest-green)] hover:bg-green-700 text-white font-semibold px-5 py-2 rounded transition"
-        >
-          Post Topic
-        </button>
-      </form>
-    </div>
+        {% endfor %}
+      </div>
+    </section>
+    {% endif %}
 
-    <ul class="space-y-4">
-      <li class="bg-white p-4 rounded-lg shadow-sm hover:shadow-md transition">
-        <a href="#" class="text-lg font-semibold text-[var(--forest-green)] hover:underline">
-          How can I safely recycle old electronics?
+    {% if user.is_authenticated %}
+      <div class="mb-6">
+        <a href="{% url 'new_forum_post' %}" class="bg-forest-green hover-bg-dark-green text-white px-5 py-2 rounded shadow">
+          New Topic
         </a>
-        <p class="text-sm text-gray-600 mt-1">
-          Started by <strong>Irfan</strong> on June 10, 2025 &middot; 4 replies
-        </p>
-      </li>
+      </div>
+    {% endif %}
 
-      <li class="bg-white p-4 rounded-lg shadow-sm hover:shadow-md transition">
-        <a href="#" class="text-lg font-semibold text-[var(--forest-green)] hover:underline">
-          Swap textbooks for next semester?
-        </a>
-        <p class="text-sm text-gray-600 mt-1">
-          Started by <strong>Salma</strong> on June 8, 2025 &middot; 2 replies
-        </p>
-      </li>
-    </ul>
+    <h2 class="text-3xl font-bold text-forest-green mb-6">📝 Forum Topics</h2>
 
+    {% if posts %}
+      <div class="grid gap-6">
+        {% for post in posts %}
+          {% if post.is_approved %}
+          <div class="bg-white p-6 rounded-lg shadow border border-green-200 mb-6">
+            <h3 class="text-xl font-bold text-forest-green mb-2">{{ post.title }}</h3>
+            <p class="text-gray-700 mb-4">{{ post.description|truncatechars:120 }}</p>
+            <p class="text-sm text-gray-600 mb-2">
+              By <strong>{{ post.user.username }}</strong> on {{ post.created_at|date:"F j, Y" }}
+            </p>
+
+            {% if user == post.user %}
+              <div class="flex gap-4 text-sm mb-2">
+                <a href="{% url 'edit_post' post.id %}" class="text-blue-600 hover:underline">✏️ Edit</a>
+                <a href="{% url 'confirm_delete_post' post.id %}" class="text-red-600 hover:underline">🗑️ Delete</a>
+              </div>
+            {% endif %}
+
+            <div class="border-t pt-4 mt-4">
+              <h4 class="font-semibold text-forest-green mb-2">Comments</h4>
+              <div id="comments-{{ post.id }}">
+                {% for comment in post.comments.all %}
+                  <div class="mb-2">
+                    <strong>{{ comment.user.username }}</strong>: {{ comment.content }}
+                    <small class="text-gray-500 text-xs">({{ comment.created_at|timesince }} ago)</small>
+
+                    {% if user == comment.user %}
+                      <div class="text-xs space-x-2 ml-2 inline">
+                       <a href="{% url 'edit_comment' post.id comment.id %}" class="text-blue-600 hover:underline">Edit</a>
+                       <a href="{% url 'delete_comment' post.id comment.id %}" class="text-red-600 hover:underline">Delete</a>
+                      </div>
+                    {% endif %}
+                  </div>
+                {% empty %}
+                  <p class="text-gray-600 italic">No comments yet.</p>
+                {% endfor %}
+              </div>
+
+              {% if user.is_authenticated %}
+              <form class="comment-form mt-2 flex gap-2" data-post-id="{{ post.id }}">
+                {% csrf_token %}
+                <input type="text" name="content" placeholder="Write a comment..." required
+                       class="flex-grow border border-gray-300 rounded px-3 py-1 comment-input" />
+                <button type="submit" class="bg-forest-green text-white px-4 rounded">Comment</button>
+              </form>
+              {% else %}
+              <p class="text-sm text-gray-600 mt-2">Login to comment.</p>
+              {% endif %}
+            </div>
+          </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+    {% else %}
+      <p class="text-gray-600 italic">No forum posts found.</p>
+    {% endif %}
   </main>
+      
+  <!-- Footer -->
+  <footer class="bg-[var(--dark-green)] text-white text-center py-6 mt-10">
+    <div class="max-w-7xl mx-auto py-6 px-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 text-sm">
+      <div>
+        <h2 class="font-bold mb-2">RecycleConnect</h2>
+        <p>Empowering communities through recycling.</p>
+      </div>
+      <div>
+        <h2 class="font-bold mb-2">Quick Links</h2>
+        <ul class="space-y-1">
+    
+          <li><a href="{% url 'home' %}" class="hover:underline">Home</a></li>
+          <li><a href="{% url 'recycling_guide' %}" class="hover:underline">Recycling Guide</a></li>
+          <li><a href="{% url 'forum' %}" class="hover:underline">Forum</a></li>
+          <li><a href="{% url 'pickup' %}" class="hover:underline">Pickup</a></li>
+          <li><a href="{% url 'event' %}" class="hover:underline">Event</a></li>
+          <li><a href="{% url 'news' %}" class="hover:underline">News</a></li>
 
-  <footer class="bg-[var(--olive-green)] text-white text-center py-6">
-    <p>&copy; 2025 RecycleConnect. All rights reserved.</p>
+          
+        </ul>
+      </div>
+      <div>
+        <h2 class="font-bold mb-2">Contact</h2>
+        <p>Email: recycleconnect@baiust.edu</p>
+        <p>Facebook: @RecycleConnect</p>
+      </div>
+    </div>
+    <div class="text-center bg-green-800 text-xs py-3">{% now "Y" %} RecycleConnect. All rights reserved.</div>
   </footer>
 
+  <!-- AJAX Comment Script -->
   <script>
-    function closeBanner() {
-      document.getElementById('announcementBanner').style.display = 'none';
-    }
-    window.onload = function() {
-      document.getElementById('announcementBanner').classList.remove('hidden');
-    };
+    document.addEventListener("DOMContentLoaded", function () {
+      const forms = document.querySelectorAll(".comment-form");
 
-    const menuButton = document.getElementById('menuButton');
-    const mobileMenu = document.getElementById('mobileMenu');
-    const menuIcon = document.getElementById('menuIcon');
-    const closeIcon = document.getElementById('closeIcon');
+      forms.forEach((form) => {
+        form.addEventListener("submit", function (e) {
+          e.preventDefault();
 
-    menuButton.addEventListener('click', () => {
-      mobileMenu.classList.toggle('hidden');
-      menuIcon.classList.toggle('hidden');
-      closeIcon.classList.toggle('hidden');
-    });
+          const postId = this.dataset.postId;
+          const input = this.querySelector(".comment-input");
+          const content = input.value;
+          const csrfToken = this.querySelector("[name=csrfmiddlewaretoken]").value;
 
-    const newTopicButton = document.getElementById('newTopicButton');
-    const newTopicForm = document.getElementById('newTopicForm');
+          if (!content.trim()) return;
 
-    newTopicButton.addEventListener('click', () => {
-      newTopicForm.classList.toggle('hidden');
-      newTopicButton.textContent = newTopicForm.classList.contains('hidden') ? 'New Topic' : 'Cancel';
+          fetch(`/forum/${postId}/comment/`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded",
+              "X-CSRFToken": csrfToken,
+            },
+            body: new URLSearchParams({ content }),
+          })
+          .then((response) => {
+            if (!response.ok) throw new Error("Failed to comment.");
+            const commentList = document.querySelector(`#comments-${postId}`);
+            const username = "{{ user.username }}";
+            const now = "just now";
+
+            const newComment = document.createElement("div");
+            newComment.className = "mb-2";
+            newComment.innerHTML = `<strong>${username}</strong>: ${content}
+              <small class="text-gray-500 text-xs">(${now})</small>`;
+            commentList.prepend(newComment);
+
+            input.value = "";
+          })
+          .catch((err) => alert("Error: could not post comment."));
+        });
+      });
     });
   </script>
+
 </body>
 </html>

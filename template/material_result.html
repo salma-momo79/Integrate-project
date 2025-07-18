@@ -1,0 +1,104 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Material Details - Recycling Guide</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    :root {
+      --light-green: #a7f3d0;   
+      --dark-green: #065f46;    
+      --forest-green: #064e3b;  
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes zoomFade {
+      from { opacity: 0; transform: scale(0.95); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    .fade-in {
+      animation: fadeIn 0.5s ease-out forwards;
+    }
+
+    .zoom-fade {
+      animation: zoomFade 0.4s ease-out forwards;
+    }
+  </style>
+</head>
+<body class="bg-gradient-to-r from-[#f0fdf4] to-[#e6ffe6] text-[var(--dark-green)] min-h-screen flex flex-col">
+
+  <header class="bg-[var(--forest-green)] text-white p-4 text-center font-bold text-xl">
+    Recycling Guide - Material Details
+  </header>
+  <main class="flex-grow container mx-auto px-4 py-8">
+    {% if material %}
+      <div class="max-w-3xl mx-auto bg-white shadow-xl rounded-xl p-6 border border-[var(--light-green)] fade-in">
+        <h1 class="text-4xl font-bold text-[var(--forest-green)] mb-6 text-center">{{ material.name }}</h1>
+        <div class="flex flex-col md:flex-row items-center gap-8">
+          {% if material.image %}
+            <img src="{{ material.image.url }}"
+                 alt="{{ material.name }}"
+                 onclick="openModal('{{ material.image.url }}')"
+                 class="w-56 h-56 object-cover rounded-2xl border-2 border-[var(--light-green)] shadow-lg hover:scale-105 transition-transform duration-300 zoom-fade cursor-pointer" />
+          {% endif %}
+
+          <div class="text-lg leading-relaxed">
+            <b>Description:</b>
+            <p class="mt-3 text-[var(--dark-green)]">{{ material.description }}</p>
+          </div>
+        </div>
+      </div>
+      <div class="text-center mt-10">
+        <a href="{% url 'recycling_guide' %}"
+           class="inline-block px-6 py-3 bg-[var(--forest-green)] text-white rounded-lg shadow hover:bg-[var(--dark-green)] transition duration-300">
+           Return to Recycling Guide
+        </a>
+      </div>
+    {% else %}
+      <p class="text-center text-red-600 text-lg font-semibold">Material not found.</p>
+
+      <div class="text-center mt-6">
+        <a href="{% url 'recycling_guide' %}"
+           class="inline-block px-6 py-3 bg-[var(--forest-green)] text-white rounded-lg shadow hover:bg-[var(--dark-green)] transition duration-300">
+           Return to Recycling Guide
+        </a>
+      </div>
+    {% endif %}
+  </main>
+
+  <div id="imageModal" class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 hidden"
+       onclick="closeModal(event)">
+    <div class="relative max-w-3xl p-4" onclick="event.stopPropagation()">
+      <button onclick="closeModal()" class="absolute top-2 right-2 text-white text-2xl font-bold">&times;</button>
+      <img id="modalImage" src="" alt="Preview" class="max-h-[80vh] rounded-xl shadow-2xl zoom-fade" />
+    </div>
+  </div>
+
+  <footer class="bg-[var(--forest-green)] text-white text-center p-4 mt-auto">
+    &copy; {{ now.year }} Recycling Guide. All rights reserved.
+  </footer>
+
+  <script>
+    function openModal(src) {
+      const modal = document.getElementById('imageModal');
+      document.getElementById('modalImage').src = src;
+      modal.classList.remove('hidden');
+    }
+
+    function closeModal(e) {
+      if (!e || (e && e.target.id === 'imageModal')) {
+        const modal = document.getElementById('imageModal');
+        modal.classList.add('hidden');
+      }
+    }
+  </script>
+</body>
+</html>

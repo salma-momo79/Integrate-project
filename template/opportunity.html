@@ -16,17 +16,12 @@
   </style>
 </head>
 <body class="bg-[var(--light-beige)] text-gray-800 min-h-screen flex flex-col font-sans">
-
-  <!-- Header -->
   <header class="bg-[var(--forest-green)] text-white py-6 shadow-md text-center">
     <h1 class="text-4xl font-bold">🌿 Volunteer Opportunities</h1>
     <p class="text-sm opacity-90">Make a difference by joining local eco-events</p>
   </header>
 
-  <!-- Main Content -->
   <main class="container mx-auto px-6 py-10 flex-grow">
-
-    <!-- Opportunities -->
     {% if opportunities %}
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
       {% for opp in opportunities %}
@@ -80,7 +75,6 @@
 
   </main>
 
-  <!-- Footer -->
   <footer class="bg-[var(--olive-green)] text-white text-center py-5 mt-10">
     <p>&copy; 2025 RecycleConnect. All rights reserved.</p>
   </footer>

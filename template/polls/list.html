@@ -1,0 +1,29 @@
+{% block content %}
+<div class="max-w-3xl mx-auto mt-10 px-4">
+  <h2 class="text-3xl font-bold text-forest-green mb-6 text-center">🗳️ Active Polls</h2>
+
+  {% if polls %}
+    <div class="space-y-4">
+      {% for poll in polls %}
+        <div class="bg-white p-5 rounded-lg shadow border border-green-200 hover:bg-[--light-green] transition duration-200">
+          <div class="flex justify-between items-center">
+            <a href="{% url 'poll_detail' poll.id %}" class="text-lg font-semibold text-forest-green hover:underline">
+              {{ poll.question }}
+            </a>
+            <span class="text-sm text-gray-500">{{ poll.created_at|date:"M d, Y H:i" }}</span>
+          </div>
+          <div class="mt-2">
+            <a href="{% url 'poll_detail' poll.id %}" class="inline-block text-sm text-blue-600 hover:underline font-medium">
+               Vote Now
+            </a>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="text-center text-gray-600 italic mt-8">
+      No polls available.
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

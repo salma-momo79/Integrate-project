@@ -4,139 +4,225 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>RecycleConnect</title>
+  <title>RecycleConnect - Home</title>
   <script src="https://cdn.jsdelivr.net/npm/alpinejs@3" defer></script>
   <script src="https://cdn.tailwindcss.com"></script>
+
   <style>
     :root {
-      --forest-green: #507b5d;
-      --olive-green: #71936a;
-      --sage-green: #a0c18a;
-      --light-beige: #eae4aa;
+      --light-green: #a7f3d0;   
+      --dark-green: #065f46;    
+      --forest-green: #064e3b;  
+    }
+
+    body {
+      background: linear-gradient(to right, #f0fdf4, #e6ffe6); 
+      color: var(--forest-green);
+      font-family: sans-serif;
+    }
+
+    nav a {
+      color: var(--light-green);
+      transition: color 0.3s ease;
+    }
+
+    nav a:hover,
+    nav a:focus,
+    nav a.active {
+      color: white;
+      background-color: var(--dark-green);
+      border-radius: 4px;
+    }
+
+    header {
+      background-color: var(--forest-green);
+      color: white;
+    }
+
+    .text-green-800 {
+      color: var(--dark-green);
+    }
+    .bg-green-100 {
+      background-color: #d1fae5;
+    }
+    .bg-green-600 {
+      background-color: #047857;
+    }
+    .bg-green-700 {
+      background-color: var(--dark-green);
+    }
+    .bg-green-800 {
+      background-color: var(--forest-green);
+    }
+    .text-green-600 {
+      color: #047857;
+    }
+    .text-green-700 {
+      color: #047857;
+    }
+    .text-green-800 {
+      color: var(--dark-green);
     }
   </style>
 </head>
-<body class="bg-[var(--light-beige)] text-gray-800">
 
-  <!-- Header with Responsive Menu -->
-  <header class="bg-[var(--forest-green)] text-white shadow-lg">
+<body class="bg-green-100">
+
+  <header class="shadow-lg">
     <div class="container mx-auto px-6 py-4 flex justify-between items-center">
-      <h1 class="text-2xl font-bold">RecycleConnect</h1>
+      <h1 class="text-2xl font-bold text-white">RecycleConnect</h1>
 
-      <!-- Hamburger for Mobile -->
       <div class="md:hidden" x-data="{ open: false }">
-        <button @click="open = !open" class="focus:outline-none">
-          <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24">
-            <path x-show="!open" fill-rule="evenodd" d="M4 6h16M4 12h16M4 18h16"/>
-            <path x-show="open" fill-rule="evenodd" d="M6 18L18 6M6 6l12 12"/>
+        <button @click="open = !open" class="focus:outline-none text-[var(--light-green)]">
+          <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path x-show="!open" d="M4 6h16M4 12h16M4 18h16"/>
+            <path x-show="open" d="M6 18L18 6M6 6l12 12"/>
           </svg>
         </button>
         <div x-show="open" class="absolute right-6 top-16 bg-white text-[var(--forest-green)] rounded-md shadow-md w-40 py-2 z-50">
-          <a href="{% url 'home' %}" class="block px-4 py-2 hover:bg-gray-100">Home</a>
-          <a href="{% url 'recycling_guide' %}"class="block px-4 py-2 hover:bg-gray-100">Guide</a>
-          <a href="{% url 'forum' %}" class="block px-4 py-2 hover:bg-gray-100">Forum</a>
-          <a href="{% url 'pickup' %}" class="block px-4 py-2 hover:bg-gray-100">Pickup</a>
-          <a href="{% url 'event' %}" class="block px-4 py-2 hover:bg-gray-100">Events</a>
-          <a href="{% url 'news' %}" class="block px-4 py-2 hover:bg-gray-100">News</a>
-          <a href="{% url 'user_profile' %}" class="block px-4 py-2 hover:bg-gray-100">Profile</a>
-          <a href="{% url 'login' %}" class="block px-4 py-2 hover:bg-gray-100">Login</a>
+          <a href="{% url 'home' %}" class="block px-4 py-2 hover:bg-green-100">Home</a>
+          <a href="{% url 'recycling_guide' %}" class="block px-4 py-2 hover:bg-green-100">Guide</a>
+          <a href="{% url 'forum' %}" class="block px-4 py-2 hover:bg-green-100">Forum</a>
+          <a href="{% url 'pickup' %}" class="block px-4 py-2 hover:bg-green-100">Pickup</a>
+          <a href="{% url 'event' %}" class="block px-4 py-2 hover:bg-green-100">Events</a>
+          <a href="{% url 'news' %}" class="block px-4 py-2 hover:bg-green-100">News</a>
+          <a href="{% url 'user_profile' %}" class="block px-4 py-2 hover:bg-green-100">Profile</a>
+          <a href="{% url 'login' %}" class="block px-4 py-2 hover:bg-green-100">Login</a>
         </div>
       </div>
 
-      <!-- Full nav for medium and up -->
-      <nav class="hidden md:flex space-x-4">
-      <a href="home" class="hover:underline">Home</a>
-        <a href="recycling_guide" class="hover:underline">Guide</a>
-        <a href="forum" class="hover:underline">Forum</a>
-        <a href="pickup" class="hover:underline">Pickup</a>
-        <a href="event" class="hover:underline">Events</a>
-        <a href="news" class="hover:underline">News</a>
-        <a href="profile" class="hover:underline">Profile</a>
-        <a href="login" class="hover:underline">Login</a>
+      <nav class="hidden md:flex space-x-6">
+        <a href="{% url 'home' %}" class="hover:underline text-[var(--light-green)] hover:text-white">Home</a>
+        <a href="{% url 'recycling_guide' %}" class="hover:underline text-[var(--light-green)] hover:text-white">Guide</a>
+        <a href="{% url 'forum' %}" class="hover:underline text-[var(--light-green)] hover:text-white">Forum</a>
+        <a href="{% url 'pickup' %}" class="hover:underline text-[var(--light-green)] hover:text-white">Pickup</a>
+        <a href="{% url 'event' %}" class="hover:underline text-[var(--light-green)] hover:text-white">Events</a>
+        <a href="{% url 'news' %}" class="hover:underline text-[var(--light-green)] hover:text-white">News</a>
+        <a href="{% url 'user_profile' %}" class="hover:underline text-[var(--light-green)] hover:text-white">Profile</a>
+        <a href="{% url 'login' %}" class="hover:underline text-[var(--light-green)] hover:text-white">Login</a>
       </nav>
     </div>
   </header>
 
-  <!-- Banner -->
-  <section class="relative bg-[var(--olive-green)]">
-    <img src="{% static 'images/home.jpeg' %}" alt="Banner" class="w-full h-[600px] md:h-[500px] object-cover object-center opacity-70" />
-    <div class="absolute inset-0 flex flex-col justify-center items-center text-center text-white px-4">
-      <h2 class="text-4xl md:text-5xl font-bold mb-4 drop-shadow-lg">Empowering Communities Through Recycling</h2>
-      <p class="text-lg md:text-xl mb-6 max-w-xl drop-shadow-md">Join our mission to build a cleaner, greener future.</p>
-      <a href="{% url 'signup' %}" class="bg-[var(--sage-green)] hover:bg-green-400 text-white font-semibold px-6 py-3 rounded-full transition">Join the Movement</a>
-    </div>
-  </section>
+<section class="relative">
 
-  <!-- About Section -->
-  <section class="py-16 bg-[var(--light-beige)] text-center">
-    <div class="container mx-auto px-6">
-      <h3 class="text-3xl font-bold text-[var(--forest-green)]">Why RecycleConnect?</h3>
-      <p class="text-lg text-gray-700 max-w-3xl mx-auto">
+  <img 
+    src="{% static 'images/home.jpeg' %}" 
+    alt="Banner" 
+    class="w-full h-[600px] md:h-[500px] object-cover object-center" 
+  />
+  
+  <div class="absolute inset-0 flex flex-col justify-center items-center text-center px-6 md:px-0">
+    <h2 class="text-white font-bold 
+               text-4xl md:text-5xl leading-tight 
+               max-w-3xl mb-6
+               drop-shadow-lg"> 
+      Empowering Communities<br />Through Recycling
+    </h2>
+    <p class="text-white text-lg md:text-xl max-w-xl mb-8 drop-shadow-md leading-relaxed">
+      Join our mission to build a cleaner, greener future.
+    </p>
+    <a href="{% url 'signup' %}" 
+       class="bg-[var(--dark-green)] hover:bg-[var(--light-green)] hover:text-[var(--dark-green)] 
+              text-white font-semibold px-8 py-3 rounded-full transition 
+              shadow-lg hover:shadow-xl">
+      Join the Movement
+    </a>
+  </div>
+</section>
+
+  <section class="py-16 bg-green-100 text-center">
+    <div class="container mx-auto px-6 max-w-4xl">
+      <h3 class="text-3xl font-bold text-[var(--dark-green)] mb-6">Why RecycleConnect?</h3>
+      <p class="text-lg text-[var(--forest-green)] mb-4">
         Every piece of waste we recycle is a step toward a cleaner, healthier, and more sustainable future. At RecycleConnect, we believe that real change begins at the community level. Our platform empowers individuals and neighborhoods by making recycling easy, accessible, and rewarding.
       </p>
-      <p class="text-lg text-gray-700 max-w-3xl mx-auto">
+      <p class="text-lg text-[var(--forest-green)] mb-4">
         Whether you're looking to find the nearest recycling center, learn how to dispose of tricky materials, schedule pickups, or participate in eco-friendly events—RecycleConnect has you covered. We’re not just a tool, we’re a movement.
       </p>
-      <p class="text-lg text-gray-700 max-w-3xl mx-auto">
+      <p class="text-lg text-[var(--forest-green)]">
         Join our growing community of changemakers and take part in local forums, monthly recycling challenges, and volunteer opportunities that make a real difference. Together, we can build a zero-waste future—one action at a time.
       </p>
     </div>
   </section>
 
   <!-- Features -->
-  <section class="py-16 bg-[var(--light-beige)]">
-    <div class="container mx-auto px-6">
-      <h3 class="text-3xl font-bold text-center text-[var(--forest-green)] mb-12">Our Features</h3>
+  <section class="py-16 bg-green-100">
+    <div class="container mx-auto px-6 max-w-6xl">
+      <h3 class="text-3xl font-bold text-center text-[var(--dark-green)] mb-12">Our Features</h3>
       <div class="grid md:grid-cols-3 gap-8">
         
         <!-- Card 1 -->
-        <a href="{% url 'recycling_guide' %}" class="block bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition hover:bg-gray-50">
-        <h4 class="text-xl font-semibold text-[var(--forest-green)] mb-2">Local Recycling Guide</h4>
-        <p class="text-gray-700">Find what can be recycled and where in your area.</p>
+        <a href="{% url 'recycling_guide' %}" class="block bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition hover:bg-green-50">
+          <h4 class="text-xl font-semibold text-[var(--dark-green)] mb-2">Local Recycling Guide</h4>
+          <p class="text-[var(--forest-green)]">Find what can be recycled and where in your area.</p>
         </a>
-
 
         <!-- Card 2 -->
-        <a href="{% url 'pickup' %}" class="block bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition hover:bg-gray-50">
-        <h4 class="text-xl font-semibold text-[var(--forest-green)] mb-2">Pickup Scheduling</h4>
-        <p class="text-gray-700">Schedule pickups and get reminders for your recycling activities.</p>
+        <a href="{% url 'pickup' %}" class="block bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition hover:bg-green-50">
+          <h4 class="text-xl font-semibold text-[var(--dark-green)] mb-2">Pickup Scheduling</h4>
+          <p class="text-[var(--forest-green)]">Schedule pickups and get reminders for your recycling activities.</p>
         </a>
-
 
         <!-- Card 3 -->
-        <a href="{% url 'forum' %}" class="block bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition hover:bg-gray-50">
-        <h4 class="text-xl font-semibold text-[var(--forest-green)] mb-2">Community Forum</h4>
-        <p class="text-gray-700">Ask questions, share tips, and collaborate with others.</p>
+        <a href="{% url 'forum' %}" class="block bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition hover:bg-green-50">
+          <h4 class="text-xl font-semibold text-[var(--dark-green)] mb-2">Community Forum</h4>
+          <p class="text-[var(--forest-green)]">Ask questions, share tips, and collaborate with others.</p>
         </a>
-
 
         <!-- Card 4 -->
-       <a href="{% url 'challenges' %}" class="block bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition hover:bg-gray-50">
-       <h4 class="text-xl font-semibold text-[var(--forest-green)] mb-2">Challenges & Rewards</h4>
-       <p class="text-gray-700">Take part in monthly challenges and earn rewards.</p>
-       </a>
-
-
-        <!-- Card 5 -->
-        <a href="{% url 'event' %}" class="block bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition hover:bg-gray-50">
-        <h4 class="text-xl font-semibold text-[var(--forest-green)] mb-2">Volunteer Opportunities</h4>
-        <p class="text-gray-700">Find local eco-volunteering events and earn certificates.</p>
+        <a href="{% url 'challenges' %}" class="block bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition hover:bg-green-50">
+          <h4 class="text-xl font-semibold text-[var(--dark-green)] mb-2">Challenges & Rewards</h4>
+          <p class="text-[var(--forest-green)]">Take part in monthly challenges and earn rewards.</p>
         </a>
 
+        <!-- Card 5 -->
+        <a href="{% url 'event' %}" class="block bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition hover:bg-green-50">
+          <h4 class="text-xl font-semibold text-[var(--dark-green)] mb-2">Volunteer Opportunities</h4>
+          <p class="text-[var(--forest-green)]">Find local eco-volunteering events and earn certificates.</p>
+        </a>
 
         <!-- Card 6 -->
-        <a href="{% url 'news' %}" class="block bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition hover:bg-gray-50">
-        <h4 class="text-xl font-semibold text-[var(--forest-green)] mb-2">News & Notifications</h4>
-        <p class="text-gray-700">Stay updated with tips, events, and recycling news.</p>
+        <a href="{% url 'news' %}" class="block bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition hover:bg-green-50">
+          <h4 class="text-xl font-semibold text-[var(--dark-green)] mb-2">News & Notifications</h4>
+          <p class="text-[var(--forest-green)]">Stay updated with tips, events, and recycling news.</p>
         </a>
       </div>
     </div>
   </section>
 
+    
   <!-- Footer -->
-  <footer class="bg-[var(--olive-green)] text-white text-center py-6 mt-10">
-    <p>&copy; 2025 RecycleConnect. All rights reserved.</p>
+  <footer class="bg-[var(--dark-green)] text-white text-center py-6 mt-10">
+    <div class="max-w-7xl mx-auto py-6 px-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 text-sm">
+      <div>
+        <h2 class="font-bold mb-2">RecycleConnect</h2>
+        <p>Empowering communities through recycling.</p>
+      </div>
+      <div>
+        <h2 class="font-bold mb-2">Quick Links</h2>
+        <ul class="space-y-1">
+    
+          <li><a href="{% url 'home' %}" class="hover:underline">Home</a></li>
+          <li><a href="{% url 'recycling_guide' %}" class="hover:underline">Recycling Guide</a></li>
+          <li><a href="{% url 'forum' %}" class="hover:underline">Forum</a></li>
+          <li><a href="{% url 'pickup' %}" class="hover:underline">Pickup</a></li>
+          <li><a href="{% url 'event' %}" class="hover:underline">Event</a></li>
+          <li><a href="{% url 'news' %}" class="hover:underline">News</a></li>
+
+          
+        </ul>
+      </div>
+      <div>
+        <h2 class="font-bold mb-2">Contact</h2>
+        <p>Email: recycleconnect@baiust.edu</p>
+        <p>Facebook: @RecycleConnect</p>
+      </div>
+    </div>
+    <div class="text-center bg-green-800 text-xs py-3">{% now "Y" %} RecycleConnect. All rights reserved.</div>
   </footer>
+
+  
 
 </body>
 </html>

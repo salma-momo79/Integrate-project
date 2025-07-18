@@ -1,0 +1,51 @@
+{% block content %}
+<div class="max-w-2xl mx-auto p-8 mt-10 bg-white shadow-lg rounded-xl border border-green-200">
+
+    <h2 class="text-2xl md:text-3xl font-bold text-center text-forest-green mb-6">
+        🗳️ {{ poll.question }}
+    </h2>
+
+    {% if not voted %}
+        <form action="{% url 'poll_vote' poll.id %}" method="post" class="space-y-4">
+            {% csrf_token %}
+            {% for option in poll.options.all %}
+                <label class="block border border-gray-300 rounded-lg p-4 hover:bg-[--light-green] cursor-pointer transition duration-200">
+                    <input type="radio" name="option" value="{{ option.id }}" class="mr-3 accent-[--forest-green]" required>
+                    <span class="text-gray-800 font-medium">{{ option.text }}</span>
+                </label>
+            {% endfor %}
+            <button type="submit" class="w-full bg-forest-green text-white py-2 rounded-md font-semibold hover-bg-dark-green transition">
+                Submit Vote
+            </button>
+        </form>
+    {% else %}
+        <div class="bg-[--light-green] border border-green-300 text-[--forest-green] text-sm font-semibold px-4 py-3 rounded mb-4 text-center">
+             You have already voted.
+        </div>
+
+        <h4 class="text-xl font-semibold mb-3 text-gray-800">Results:</h4>
+
+        {% for option in poll.options.all %}
+            <div class="mb-5">
+                <div class="flex justify-between items-center mb-1 text-sm font-medium text-gray-700">
+                    <span>{{ option.text }}</span>
+                    <span>{{ option.vote_percentage|floatformat:1 }}% ({{ option.vote_count }} vote{{ option.vote_count|pluralize }})</span>
+                </div>
+                <div class="w-full bg-gray-200 rounded-full h-4">
+                    <div class="bg-[--forest-green] h-4 rounded-full transition-all duration-500" style="width: {{ option.vote_percentage }}%"></div>
+                </div>
+            </div>
+        {% endfor %}
+
+        <div class="text-sm text-gray-600 text-center mt-4">
+            Total Votes: <strong>{{ total_votes }}</strong>
+        </div>
+    {% endif %}
+
+    <div class="mt-6 text-center">
+        <a href="{% url 'poll_list' %}" class="inline-block text-[--forest-green] hover:underline text-sm">
+            &larr; Back to Polls
+        </a>
+    </div>
+</div>
+{% endblock %}

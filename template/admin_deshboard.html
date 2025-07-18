@@ -1,0 +1,70 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Admin Dashboard | RecycleConnect</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      background: linear-gradient(to right, #f0fdf4, #e6ffe6);
+      min-height: 100vh;
+    }
+    .text-green-base { color: #065f46; }
+    .bg-green-base { background-color: #065f46; }
+    .hover-bg-green-base:hover { background-color: #064e3b; }
+  </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+  <nav class="bg-green-base text-white shadow-md">
+    <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+      <div class="text-xl font-bold">♻ RecycleConnect Admin</div>
+      <ul class="hidden md:flex space-x-6 font-medium">
+        <li><a href="{% url 'admin_dashboard' %}" class="hover:text-green-300 underline">Dashboard</a></li>
+        <li><a href="{% url 'home' %}" class="hover:text-green-300">Site Home</a></li>
+        <li><a href="{% url 'admin_users' %}" class="hover:text-green-300">Users</a></li>
+        <li><a href="{% url 'admin_volunteers' %}" class="hover:text-green-300">Volunteers</a></li>
+        <li><a href="{% url 'admin_proofs' %}" class="hover:text-green-300">Proof Approvals</a></li>
+        <li>
+          <form action="{% url 'logout' %}" method="POST" class="inline">
+            {% csrf_token %}
+            <button type="submit" class="hover:text-green-300">Logout</button>
+          </form>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <main class="flex-grow container mx-auto px-6 py-10">
+    <h1 class="text-3xl font-bold text-green-base mb-8">Admin Dashboard</h1>
+
+    <div class="grid gap-8 md:grid-cols-3">
+      <section class="bg-white rounded-lg shadow p-6">
+        <h2 class="text-xl font-semibold mb-4 text-green-base">User Management</h2>
+        <p>View, ban, or delete users.</p>
+        <a href="{% url 'admin_users' %}" class="mt-4 inline-block bg-green-base hover-bg-green-base text-white px-4 py-2 rounded">Manage Users</a>
+      </section>
+
+      <section class="bg-white rounded-lg shadow p-6">
+        <h2 class="text-xl font-semibold mb-4 text-green-base">Volunteer Signups</h2>
+        <p>Approve hours, certify volunteers.</p>
+        <a href="{% url 'admin_volunteers' %}" class="mt-4 inline-block bg-green-base hover-bg-green-base text-white px-4 py-2 rounded">Manage Volunteers</a>
+      </section>
+
+      <section class="bg-white rounded-lg shadow p-6">
+        <h2 class="text-xl font-semibold mb-4 text-green-base">Proof Approvals</h2>
+        <p>Review and approve recycling proofs submitted by users.</p>
+        <a href="{% url 'admin_proofs' %}" class="mt-4 inline-block bg-green-base hover-bg-green-base text-white px-4 py-2 rounded">Review Proofs</a>
+      </section>
+
+    </div>
+  </main>
+
+  <footer class="bg-green-base text-white text-center py-6 mt-auto">
+    <p>© {{ now.year }} RecycleConnect. All rights reserved.</p>
+  </footer>
+
+</body>
+</html>

@@ -1,0 +1,37 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Register for {{ event.title }}</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    :root {
+      --forest-green: #064e3b;
+      --dark-green: #065f46;
+      --light-green: #a7f3d0;
+    }
+    body {
+      background: var(--light-green);
+    }
+    .bg-forest-green { background-color: var(--forest-green); }
+    .hover-bg-dark-green:hover { background-color: var(--dark-green); }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col items-center justify-center py-12">
+
+  <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
+    <h2 class="text-2xl font-bold text-forest-green mb-6 text-center">Register for {{ event.title }}</h2>
+    
+    <form method="POST" novalidate>
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button type="submit" class="w-full bg-forest-green text-white py-2 rounded hover-bg-dark-green mt-4">Submit</button>
+    </form>
+
+    <a href="{% url 'event' %}" class="text-sm text-green-700 hover:underline mt-6 block text-center">← Back to Events</a>
+  </div>
+
+</body>
+</html>

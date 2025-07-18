@@ -1,67 +1,106 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Green Event Page</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Events | RecycleConnect</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    :root {
+      --light-green: #a7f3d0;
+      --dark-green: #065f46;
+      --forest-green: #064e3b;
+      --background-gradient-start: #f0fdf4;
+      --background-gradient-end: #e6ffe6;
+    }
+    body {
+      background: linear-gradient(to right, var(--background-gradient-start), var(--background-gradient-end));
+    }
+    .text-forest-green { color: var(--forest-green); }
+    .bg-forest-green { background-color: var(--forest-green); }
+    .hover-bg-dark-green:hover { background-color: var(--dark-green); }
+  </style>
 </head>
-<body class="bg-[#f2f2c2] text-gray-800 font-sans">
+<body class="min-h-screen flex flex-col">
 
-  
-  <header class="bg-[#3d8156] text-white p-6 text-center">
-    <h1 class="text-4xl font-bold">Green Harmony Events</h1>
-    <p class="text-lg mt-2">Celebrate nature with us</p>
+  <!-- Header -->
+  <header class="bg-forest-green text-white">
+    <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+      <h1 class="text-2xl font-bold">RecycleConnect</h1>
+      <nav class="space-x-6 hidden md:flex">
+        <a href="{% url 'home' %}" class="hover:underline">Home</a>
+        <a href="{% url 'recycling_guide' %}" class="hover:underline">Guide</a>
+        <a href="{% url 'forum' %}" class="hover:underline">Forum</a>
+        <a href="{% url 'pickup' %}" class="hover:underline">Pickup</a>
+        <a href="{% url 'event' %}" class="hover:underline">Events</a>
+        <a href="{% url 'news' %}" class="hover:underline">News</a>
+        {% if user.is_authenticated %}
+          <a href="{% url 'user_profile' %}" class="hover:underline">Profile</a>
+          <form action="{% url 'logout' %}" method="POST" class="inline">
+            {% csrf_token %}
+            <button type="submit" class="hover:underline">Logout</button>
+          </form>
+        {% else %}
+          <a href="{% url 'login' %}" class="hover:underline">Login</a>
+          <a href="{% url 'signup' %}" class="hover:underline">Sign Up</a>
+        {% endif %}
+      </nav>
+    </div>
   </header>
 
-  
-  <section class="bg-[#99cc85] py-12">
-    <div class="max-w-6xl mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-6">
+  <!-- Event Section -->
+  <section class="py-12 text-center">
+    <h2 class="text-4xl font-bold text-forest-green mb-2">🌱 Green Harmony Events</h2>
+    <p class="text-lg text-gray-700">Celebrate nature with us through exciting and eco-friendly events!</p>
+  </section>
+
+  <!-- Event Cards -->
+  <section class="py-10">
+    <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 px-4">
+      {% for e in events %}
+      <div class="bg-white p-6 rounded-lg shadow border border-green-200 hover:bg-[var(--light-green)] transition">
+        <h3 class="text-2xl font-semibold text-forest-green mb-2">{{ e.title }}</h3>
+        <p class="mb-2 text-gray-700">{{ e.description|default:"No description available." }}</p>
+        <p class="mb-2 text-sm text-gray-600">📅 {{ e.date|date:"F j, Y" }}</p>
+        <p class="mb-4 text-sm text-gray-600">📍 {{ e.location }}</p>
+        <a href="{% url 'register_event' e.id %}" class="bg-forest-green text-white py-2 px-4 rounded hover-bg-dark-green">Register</a>
+      </div>
+      {% empty %}
+      <p class="text-center text-gray-500 col-span-3">No upcoming events found.</p>
+      {% endfor %}
+    </div>
+  </section>
       
-     
-      <div class="bg-[#7aa95c] p-6 rounded-lg shadow-md">
-        <h2 class="text-2xl font-semibold mb-2">Tree Planting Drive</h2>
-        <p class="mb-4">Join us in greening our city by planting trees in public parks.</p>
-        <button class="bg-[#3d8156] text-white py-2 px-4 rounded hover:bg-[#316947]">Join Now</button>
+  <!-- Footer -->
+  <footer class="bg-[var(--dark-green)] text-white text-center py-6 mt-10">
+    <div class="max-w-7xl mx-auto py-6 px-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 text-sm">
+      <div>
+        <h2 class="font-bold mb-2">RecycleConnect</h2>
+        <p>Empowering communities through recycling.</p>
       </div>
-      <div class="bg-[#7aa95c] p-6 rounded-lg shadow-md">
-        <h2 class="text-2xl font-semibold mb-2">Eco Workshop</h2>
-        <p class="mb-4">Learn sustainable habits to protect our planet.</p>
-        <button class="bg-[#3d8156] text-white py-2 px-4 rounded hover:bg-[#316947]">Register</button>
-      </div>
+      <div>
+        <h2 class="font-bold mb-2">Quick Links</h2>
+        <ul class="space-y-1">
+    
+          <li><a href="{% url 'home' %}" class="hover:underline">Home</a></li>
+          <li><a href="{% url 'recycling_guide' %}" class="hover:underline">Recycling Guide</a></li>
+          <li><a href="{% url 'forum' %}" class="hover:underline">Forum</a></li>
+          <li><a href="{% url 'pickup' %}" class="hover:underline">Pickup</a></li>
+          <li><a href="{% url 'event' %}" class="hover:underline">Event</a></li>
+          <li><a href="{% url 'news' %}" class="hover:underline">News</a></li>
 
-      <div class="bg-[#7aa95c] p-6 rounded-lg shadow-md">
-        <h2 class="text-2xl font-semibold mb-2">Green Food Fest</h2>
-        <p class="mb-4">Enjoy organic and eco-friendly cuisines from local vendors.</p>
-        <button class="bg-[#3d8156] text-white py-2 px-4 rounded hover:bg-[#316947]">Get Ticket</button>
+          
+        </ul>
       </div>
-
+      <div>
+        <h2 class="font-bold mb-2">Contact</h2>
+        <p>Email: recycleconnect@baiust.edu</p>
+        <p>Facebook: @RecycleConnect</p>
+      </div>
     </div>
-  </section>
-
-
-  <section class="bg-[#bfe6a1] py-12">
-    <div class="max-w-xl mx-auto px-4">
-      <h2 class="text-3xl font-bold text-center mb-6">Event Registration</h2>
-      <form class="bg-white p-6 rounded-lg shadow-md space-y-4">
-        <input type="text" placeholder="Full Name" class="w-full p-3 border border-gray-300 rounded" required>
-        <input type="email" placeholder="Email Address" class="w-full p-3 border border-gray-300 rounded" required>
-        <select class="w-full p-3 border border-gray-300 rounded" required>
-             <option value="">Select Event</option>
-          <option>Tree Planting Drive</option>
-          <option>Eco Workshop</option>
-          <option>Green Food Fest</option>
-        </select>
-        <button type="submit" class="bg-[#3d8156] text-white w-full py-3 rounded hover:bg-[#316947]">Submit</button>
-      </form>
-    </div>
-  </section>
-
-
-  <footer class="bg-[#3d8156] text-white text-center py-4">
-    <p>&copy; 2025 Green Harmony. All rights reserved.</p>
+    <div class="text-center bg-green-800 text-xs py-3">{% now "Y" %} RecycleConnect. All rights reserved.</div>
   </footer>
 
 </body>
 </html>
-
